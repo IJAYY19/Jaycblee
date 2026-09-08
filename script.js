@@ -1,18 +1,112 @@
 /* ====================================================
-   0. PRELOADER — HIDE AFTER CINEMATIC ANIMATION
+   0. PRELOADER — CINEMATIC AUDIO & SMOOTH EXIT
    ==================================================== */
 (function initPreloader() {
     const preloader = document.getElementById('preloader');
     if (!preloader) return;
 
-    // Primary: fire after page fully loads + animation completes (~2.1s)
+    // ── Synthetic Cinematic Intro Audio via Web Audio API ──
+    function playCinematicIntroSound() {
+        try {
+            const AudioCtx = window.AudioContext || window.webkitAudioContext;
+            if (!AudioCtx) return;
+            const ctx = new AudioCtx();
+
+            const now = ctx.currentTime;
+
+            // 1. SUB-BASS RISING SWELL (Harmonized with line trace 0.0s - 1.2s)
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            const filter = ctx.createBiquadFilter();
+
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(80, now);
+            osc.frequency.exponentialRampToValueAtTime(320, now + 1.1);
+
+            filter.type = 'lowpass';
+            filter.frequency.setValueAtTime(350, now);
+            filter.frequency.linearRampToValueAtTime(800, now + 1.1);
+
+            gain.gain.setValueAtTime(0.001, now);
+            gain.gain.exponentialRampToValueAtTime(0.35, now + 0.6);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 1.25);
+
+            osc.connect(filter);
+            filter.connect(gain);
+            gain.connect(ctx.destination);
+
+            osc.start(now);
+            osc.stop(now + 1.3);
+
+            // 2. CRYSTALLINE GLOSS CHIME (Harmonized with gloss sweep 1.0s - 2.0s)
+            const chimeTimes = [now + 0.95, now + 1.1];
+            const chimeFreqs = [1046.5, 1318.5]; // C6 and E6 harmonics
+
+            chimeTimes.forEach((startTime, idx) => {
+                const cOsc = ctx.createOscillator();
+                const cGain = ctx.createGain();
+
+                cOsc.type = 'sine';
+                cOsc.frequency.setValueAtTime(chimeFreqs[idx], startTime);
+                cOsc.frequency.exponentialRampToValueAtTime(chimeFreqs[idx] * 1.5, startTime + 0.8);
+
+                cGain.gain.setValueAtTime(0.001, startTime);
+                cGain.gain.exponentialRampToValueAtTime(0.2, startTime + 0.08);
+                cGain.gain.exponentialRampToValueAtTime(0.0001, startTime + 0.9);
+
+                cOsc.connect(cGain);
+                cGain.connect(ctx.destination);
+
+                cOsc.start(startTime);
+                cOsc.stop(startTime + 0.95);
+            });
+
+            // 3. AIR SHIMMER WOOSH (Gentle high-frequency texture)
+            const noiseBuffer = ctx.createBuffer(1, ctx.sampleRate * 0.8, ctx.sampleRate);
+            const output = noiseBuffer.getChannelData(0);
+            for (let i = 0; i < noiseBuffer.length; i++) {
+                output[i] = Math.random() * 2 - 1;
+            }
+            const noise = ctx.createBufferSource();
+            noise.buffer = noiseBuffer;
+
+            const noiseFilter = ctx.createBiquadFilter();
+            noiseFilter.type = 'bandpass';
+            noiseFilter.frequency.setValueAtTime(3200, now + 0.9);
+            noiseFilter.Q.setValueAtTime(3, now + 0.9);
+
+            const noiseGain = ctx.createGain();
+            noiseGain.gain.setValueAtTime(0.001, now + 0.9);
+            noiseGain.gain.exponentialRampToValueAtTime(0.08, now + 1.15);
+            noiseGain.gain.exponentialRampToValueAtTime(0.0001, now + 1.7);
+
+            noise.connect(noiseFilter);
+            noiseFilter.connect(noiseGain);
+            noiseGain.connect(ctx.destination);
+
+            noise.start(now + 0.9);
+            noise.stop(now + 1.75);
+
+        } catch (_) {
+            // Graceful fallback for strict autoplay restrictions
+        }
+    }
+
+    // Trigger sound as early as possible
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+        playCinematicIntroSound();
+    } else {
+        document.addEventListener('DOMContentLoaded', playCinematicIntroSound, { once: true });
+    }
+
+    // Hide preloader after animation sequence completes (~2.1s)
     window.addEventListener('load', () => {
         setTimeout(() => {
             preloader.classList.add('preloader-hidden');
         }, 2100);
     });
 
-    // Fallback: hard limit 3.5s in case assets are slow
+    // Fallback timer: hard limit 3.5s
     setTimeout(() => {
         if (preloader && !preloader.classList.contains('preloader-hidden')) {
             preloader.classList.add('preloader-hidden');
@@ -111,21 +205,21 @@ window.addEventListener('scroll', () => {
 (function initNavPill() {
     'use strict';
 
-    // ── Element refs ──────────────────────────────────────
+    // â”€â”€ Element refs â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     const nlinks = document.getElementById('nl');
     const pill = document.getElementById('navIndicator');
     const navLinks = nlinks ? Array.from(nlinks.querySelectorAll('a[href^="#"]')) : [];
 
     if (!pill || navLinks.length === 0) return;
 
-    // ── Section IDs derived from the nav links ─────────────
+    // â”€â”€ Section IDs derived from the nav links â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     const sectionIds = navLinks.map(a => a.getAttribute('href').slice(1));
 
-    // ── State ──────────────────────────────────────────────
+    // â”€â”€ State â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     let activeSection = sectionIds[0];   // currently tracked section
     let isHovering = false;           // true while mouse is inside nlinks
 
-    // ── Pill position calculator ───────────────────────────
+    // â”€â”€ Pill position calculator â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     /**
      * Moves the pill behind `targetLink`.
      * Uses offsetLeft/offsetWidth relative to the <ul> parent
@@ -152,14 +246,14 @@ window.addEventListener('scroll', () => {
         return navLinks.find(a => a.getAttribute('href') === '#' + id) || null;
     }
 
-    // ── Active link class toggler ──────────────────────────
+    // â”€â”€ Active link class toggler â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     function setActiveLink(id) {
         navLinks.forEach(a => {
             a.classList.toggle('active', a.getAttribute('href') === '#' + id);
         });
     }
 
-    // ── Apply active section (pill + classes) ──────────────
+    // â”€â”€ Apply active section (pill + classes) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     function applyActive(id) {
         activeSection = id;
         setActiveLink(id);
@@ -168,7 +262,7 @@ window.addEventListener('scroll', () => {
         }
     }
 
-    // ── Scrollspy via IntersectionObserver ─────────────────
+    // â”€â”€ Scrollspy via IntersectionObserver â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     // Uses a two-pass strategy:
     //   1. IntersectionObserver with a tall rootMargin so we know
     //      which sections are "near" the viewport.
@@ -187,7 +281,7 @@ window.addEventListener('scroll', () => {
             const el = document.getElementById(id);
             if (!el) return;
             const rect = el.getBoundingClientRect();
-            // distance from nav bottom — prefer the one just below nav
+            // distance from nav bottom â€” prefer the one just below nav
             const dist = Math.abs(rect.top - NAV_HEIGHT);
             if (dist < bestTop) {
                 bestTop = dist;
@@ -223,7 +317,7 @@ window.addEventListener('scroll', () => {
         if (el) sectionObserver.observe(el);
     });
 
-    // ── Hover micro-interactions ───────────────────────────
+    // â”€â”€ Hover micro-interactions â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     navLinks.forEach(link => {
         link.addEventListener('mouseenter', () => {
             isHovering = true;
@@ -237,7 +331,7 @@ window.addEventListener('scroll', () => {
         movePillToLink(getLinkBySection(activeSection));
     });
 
-    // ── Click: instantly snap active section to avoid lag ──
+    // â”€â”€ Click: instantly snap active section to avoid lag â”€â”€
     navLinks.forEach(link => {
         link.addEventListener('click', () => {
             const id = link.getAttribute('href').slice(1);
@@ -248,7 +342,7 @@ window.addEventListener('scroll', () => {
         });
     });
 
-    // ── Resize: recalculate pill position ──────────────────
+    // â”€â”€ Resize: recalculate pill position â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     let resizeTimer;
     window.addEventListener('resize', () => {
         clearTimeout(resizeTimer);
@@ -257,7 +351,7 @@ window.addEventListener('scroll', () => {
         }, 80);
     });
 
-    // ── Initial render (after fonts/layout settle) ─────────
+    // â”€â”€ Initial render (after fonts/layout settle) â”€â”€â”€â”€â”€â”€â”€â”€â”€
     // rAF + small delay ensures all offsetWidths are accurate.
     requestAnimationFrame(() => {
         setTimeout(() => {
@@ -446,473 +540,330 @@ window.addEventListener('scroll', () => {
 })();
 
 /* ====================================================
-   3. LOGIKA MINI GAME: QA BUG BUSTER (SYSTEM DEBUGGER)
+   3. LOGIKA GAME: NOKIA 3310 RETRO SNAKE
    ==================================================== */
-(function initGame() {
-    const cv = document.getElementById("gameCanvas");
+(function initSnakeGame() {
+    const cv = document.getElementById('gameCanvas');
     if (!cv) return;
+    const ctx = cv.getContext('2d');
 
-    const ctx = cv.getContext("2d");
-    const W = cv.width, H = cv.height;
-    const scEl = document.getElementById("sc");
-    const lvEl = document.getElementById("lv");
+    // â”€â”€ Grid config â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    const CELL = 10;             // pixel size of one grid cell
+    const COLS = cv.width / CELL;   // 28 cols
+    const ROWS = cv.height / CELL;   // 20 rows
 
-    let state = "idle"; // "idle", "playing", "dead"
+    // â”€â”€ Game State â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    let state = 'idle';        // 'idle' | 'playing' | 'paused' | 'dead'
+    let snake = [];
+    let dir = 'RIGHT';
+    let nextDir = 'RIGHT';
+    let food = { x: 0, y: 0 };
+    let bonus = null;          // occasional bonus food
     let score = 0;
-    let lives = 3;
-    let wave = 1;
-    let paddle, bugs = [], lasers = [], particles = [], texts = [];
-    let keys = {};
+    let hiScore = 0;
+    let level = 1;
     let frame = 0;
-    let lastShot = 0;
-    let aid;
+    let raf = null;
+    let lastTick = 0;
+    let bonusTimer = 0;
 
-    const BUG_TYPES = [
-        { label: "404", color: "#f87171", border: "#ef4444", pts: 20, speed: 1.1 },
-        { label: "Syntax Error", color: "#facc15", border: "#eab308", pts: 25, speed: 1.2 },
-        { label: "NullPointer", color: "#fb923c", border: "#f97316", pts: 30, speed: 1.3 },
-        { label: "Bug", color: "#38bdf8", border: "#0284c7", pts: 15, speed: 1.0 },
-        { label: "Memory Leak", color: "#c084fc", border: "#a855f7", pts: 35, speed: 1.4 }
-    ];
+    // DOM refs
+    const scEl = document.getElementById('sc');
+    const hiEl = document.getElementById('hisc');
+    const lvEl = document.getElementById('lv');
 
-    function initPaddle() {
-        paddle = {
-            x: W / 2,
-            y: H - 32,
-            w: 80,
-            h: 12,
-            vx: 0,
-            targetX: W / 2
-        };
+    // â”€â”€ Speed per level (ms between ticks) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    function tickInterval() {
+        return Math.max(80, 200 - (level - 1) * 18);
     }
 
-    function spawnBug() {
-        const type = BUG_TYPES[Math.floor(Math.random() * BUG_TYPES.length)];
-        ctx.font = "bold 10px 'Plus Jakarta Sans', sans-serif";
-        const width = ctx.measureText ? Math.max(66, ctx.measureText("[" + type.label + "]").width + 18) : 75;
-        const x = width / 2 + Math.random() * (W - width);
-        const vy = (type.speed + wave * 0.2 + Math.random() * 0.4) * 0.85;
-        const vx = (Math.random() - 0.5) * 0.5;
-
-        bugs.push({
-            x,
-            y: -18,
-            w: width,
-            h: 20,
-            vx,
-            vy,
-            label: "[" + type.label + "]",
-            color: type.color,
-            border: type.border,
-            pts: type.pts
-        });
-    }
-
-    function spawnBurst(x, y, color, count = 12) {
-        for (let i = 0; i < count; i++) {
-            const angle = Math.random() * Math.PI * 2;
-            const speed = Math.random() * 3.5 + 0.8;
-            particles.push({
-                x,
-                y,
-                vx: Math.cos(angle) * speed,
-                vy: Math.sin(angle) * speed,
-                life: 1.0,
-                color,
-                size: Math.random() * 2.8 + 1.2
-            });
-        }
-    }
-
-    function addFloatingText(str, x, y, color) {
-        texts.push({
-            text: str,
-            x,
-            y,
-            life: 1.0,
-            color
-        });
-    }
-
-    function updateHud() {
+    // â”€â”€ HUD update â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    function updateHUD() {
         if (scEl) scEl.textContent = score;
-        if (lvEl) {
-            lvEl.textContent = `${lives}/3`;
+        if (hiEl) hiEl.textContent = hiScore;
+        if (lvEl) lvEl.textContent = level;
+    }
+
+    // â”€â”€ Spawn food at random empty cell â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    function spawnFood(isBonus = false) {
+        let pos;
+        do {
+            pos = {
+                x: Math.floor(Math.random() * COLS),
+                y: Math.floor(Math.random() * ROWS)
+            };
+        } while (snake.some(s => s.x === pos.x && s.y === pos.y));
+
+        if (isBonus) {
+            bonus = pos;
+            bonusTimer = 60; // lives for ~60 ticks
+        } else {
+            food = pos;
         }
     }
 
-    window.startGame = function () {
-        if (aid) cancelAnimationFrame(aid);
+    // â”€â”€ Init / reset game â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    function reset() {
+        snake = [
+            { x: 6, y: 10 },
+            { x: 5, y: 10 },
+            { x: 4, y: 10 }
+        ];
+        dir = 'RIGHT';
+        nextDir = 'RIGHT';
         score = 0;
-        lives = 3;
-        wave = 1;
-        bugs = [];
-        lasers = [];
-        particles = [];
-        texts = [];
+        level = 1;
         frame = 0;
-        initPaddle();
-        updateHud();
-        state = "playing";
-        for (let i = 0; i < 2; i++) spawnBug();
-        loop();
-    };
-
-    function shootLaser() {
-        const now = Date.now();
-        if (now - lastShot > 160) {
-            lasers.push({
-                x: paddle.x,
-                y: paddle.y - 8,
-                vy: -9
-            });
-            lasers.push({
-                x: paddle.x - paddle.w * 0.35,
-                y: paddle.y - 4,
-                vy: -8.5
-            });
-            lasers.push({
-                x: paddle.x + paddle.w * 0.35,
-                y: paddle.y - 4,
-                vy: -8.5
-            });
-            lastShot = now;
-        }
+        bonus = null;
+        bonusTimer = 0;
+        spawnFood();
+        updateHUD();
     }
 
-    function handleCanvasInteraction(e) {
-        const rect = cv.getBoundingClientRect();
-        const scaleX = cv.width / rect.width;
-        const scaleY = cv.height / rect.height;
-        const clientX = e.clientX || (e.touches && e.touches[0] ? e.touches[0].clientX : null);
-        const clientY = e.clientY || (e.touches && e.touches[0] ? e.touches[0].clientY : null);
+    // â”€â”€ Collision helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    function headHitsWall(head) {
+        return head.x < 0 || head.x >= COLS || head.y < 0 || head.y >= ROWS;
+    }
+    function headHitsSelf(head) {
+        return snake.some(s => s.x === head.x && s.y === head.y);
+    }
 
-        if (clientX === null) return;
-        const tapX = (clientX - rect.left) * scaleX;
-        const tapY = (clientY - rect.top) * scaleY;
+    // â”€â”€ One logic tick â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    function tick() {
+        dir = nextDir;
 
-        if (state !== "playing") {
-            window.startGame();
+        const head = { ...snake[0] };
+        if (dir === 'UP') head.y--;
+        if (dir === 'DOWN') head.y++;
+        if (dir === 'LEFT') head.x--;
+        if (dir === 'RIGHT') head.x++;
+
+        if (headHitsWall(head) || headHitsSelf(head)) {
+            state = 'dead';
+            if (score > hiScore) hiScore = score;
+            updateHUD();
             return;
         }
 
-        paddle.targetX = tapX;
+        snake.unshift(head);
 
-        let squashedAny = false;
-        bugs = bugs.filter((bug) => {
-            const hit = Math.abs(tapX - bug.x) < bug.w / 2 + 10 && Math.abs(tapY - bug.y) < bug.h + 10;
-            if (hit) {
-                squashedAny = true;
-                score += bug.pts;
-                spawnBurst(bug.x, bug.y, "#00ff88", 16);
-                addFloatingText("+" + bug.pts, bug.x, bug.y, "#00ff88");
-                updateHud();
-                return false;
-            }
-            return true;
-        });
-
-        if (!squashedAny) {
-            shootLaser();
-        }
-    }
-
-    cv.addEventListener("mousedown", handleCanvasInteraction);
-    cv.addEventListener("touchstart", (e) => {
-        handleCanvasInteraction(e);
-        e.preventDefault();
-    }, { passive: false });
-
-    cv.addEventListener("mousemove", (e) => {
-        if (state !== "playing") return;
-        const rect = cv.getBoundingClientRect();
-        const scaleX = cv.width / rect.width;
-        paddle.targetX = (e.clientX - rect.left) * scaleX;
-    });
-
-    function loop() {
-        aid = requestAnimationFrame(loop);
-        frame++;
-
-        ctx.fillStyle = "#040a07";
-        ctx.fillRect(0, 0, W, H);
-
-        // Subtle Grid Lines
-        ctx.strokeStyle = "rgba(16, 185, 129, 0.04)";
-        ctx.lineWidth = 1;
-        for (let x = 0; x < W; x += 28) {
-            ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
-        }
-        for (let y = 0; y < H; y += 28) {
-            ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
-        }
-
-        // Clean Defense Boundary Line (no fake terminal text)
-        const baseY = H - 18;
-        ctx.strokeStyle = "rgba(16, 185, 129, 0.25)";
-        ctx.lineWidth = 1.5;
-        ctx.beginPath();
-        ctx.moveTo(0, baseY);
-        ctx.lineTo(W, baseY);
-        ctx.stroke();
-
-        if (state === "playing") update();
-        draw();
-
-        if (state === "idle") {
-            renderGameOverlay("BUG BUSTER", "Tembak bug yang jatuh sebelum menyentuh batas bawah. Klik Mulai Main!", "#00ff88");
-        } else if (state === "dead") {
-            renderGameOverlay("GAME OVER", `Skor Akhir: ${score} · Klik untuk main lagi`, "#f87171");
-        }
-    }
-
-    function update() {
-        const speed = 4.8;
-        if (keys["ArrowLeft"] || keys["a"] || keys["A"]) {
-            paddle.vx = -speed;
-            paddle.targetX = paddle.x - speed * 4;
-        } else if (keys["ArrowRight"] || keys["d"] || keys["D"]) {
-            paddle.vx = speed;
-            paddle.targetX = paddle.x + speed * 4;
+        // Eat normal food
+        if (head.x === food.x && head.y === food.y) {
+            score += 10 * level;
+            if (score >= level * 80) level = Math.min(10, level + 1);
+            spawnFood();
+            // 20% chance spawn bonus
+            if (!bonus && Math.random() < 0.2) spawnFood(true);
+            updateHUD();
+        } else if (bonus && head.x === bonus.x && head.y === bonus.y) {
+            // Eat bonus food
+            score += 30 * level;
+            bonus = null;
+            updateHUD();
         } else {
-            paddle.vx = (paddle.targetX - paddle.x) * 0.2;
+            snake.pop();
         }
 
-        paddle.x += paddle.vx;
-        paddle.x = Math.max(paddle.w / 2, Math.min(W - paddle.w / 2, paddle.x));
-
-        if (keys["ArrowUp"] || keys[" "] || keys["w"] || keys["W"]) {
-            shootLaser();
+        if (bonus) {
+            bonusTimer--;
+            if (bonusTimer <= 0) bonus = null;
         }
-
-        const spawnInterval = Math.max(35, 75 - wave * 6);
-        if (frame % spawnInterval === 0) {
-            spawnBug();
-        }
-
-        lasers.forEach(l => { l.y += l.vy; });
-        lasers = lasers.filter(l => l.y > 0);
-
-        bugs.forEach(b => {
-            b.x += b.vx;
-            b.y += b.vy;
-            if (b.x < b.w / 2 || b.x > W - b.w / 2) b.vx *= -1;
-        });
-
-        // Laser vs Bug Collision
-        bugs = bugs.filter(b => {
-            for (let i = 0; i < lasers.length; i++) {
-                const l = lasers[i];
-                if (Math.abs(l.x - b.x) < b.w / 2 && Math.abs(l.y - b.y) < b.h / 2 + 5) {
-                    lasers.splice(i, 1);
-                    score += b.pts;
-                    spawnBurst(b.x, b.y, "#00ff88", 12);
-                    addFloatingText("+" + b.pts, b.x, b.y, "#00ff88");
-                    updateHud();
-                    if (score >= wave * 150) wave++;
-                    return false;
-                }
-            }
-            return true;
-        });
-
-        // Paddle vs Bug Collision (Catch bug with shield)
-        bugs = bugs.filter(b => {
-            const hitPaddle = (
-                Math.abs(paddle.x - b.x) < (paddle.w + b.w) / 2 &&
-                Math.abs(paddle.y - b.y) < (paddle.h + b.h) / 2 + 3
-            );
-
-            if (hitPaddle) {
-                score += b.pts + 15;
-                spawnBurst(b.x, b.y, "#00ff88", 18);
-                addFloatingText("+" + (b.pts + 15), b.x, b.y, "#00ff88");
-                updateHud();
-                if (score >= wave * 150) wave++;
-                return false;
-            }
-            return true;
-        });
-
-        // Bug reaches bottom baseline
-        const baseY = H - 20;
-        bugs = bugs.filter(b => {
-            if (b.y + b.h / 2 >= baseY) {
-                lives--;
-                spawnBurst(b.x, baseY, "#ef4444", 20);
-                addFloatingText("-1 NYAWA", b.x, baseY - 15, "#ef4444");
-                updateHud();
-                if (lives <= 0) {
-                    lives = 0;
-                    state = "dead";
-                    updateHud();
-                }
-                return false;
-            }
-            return true;
-        });
-
-        particles.forEach(p => {
-            p.x += p.vx;
-            p.y += p.vy;
-            p.life -= 0.038;
-            p.vx *= 0.94;
-            p.vy *= 0.94;
-        });
-        particles = particles.filter(p => p.life > 0);
-
-        texts.forEach(t => {
-            t.y -= 0.8;
-            t.life -= 0.03;
-        });
-        texts = texts.filter(t => t.life > 0);
     }
 
-    function draw() {
-        lasers.forEach(l => {
-            ctx.save();
-            ctx.shadowColor = "#00ff88";
-            ctx.shadowBlur = 8;
-            ctx.fillStyle = "#00ff88";
-            ctx.fillRect(l.x - 1.5, l.y, 3, 10);
-            ctx.restore();
-        });
+    // â”€â”€ Nokia-style pixel art renderer â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    const BG_COLOR = '#8ba87a';   // classic greenish LCD
+    const GRID_COLOR = 'rgba(0,0,0,0.06)';
+    const SNAKE_COLOR = '#1a1a1a';
+    const FOOD_COLOR = '#0f0f0f';
+    const BONUS_COLOR = '#10b981';
+    const DEAD_COLOR = '#ef4444';
 
-        bugs.forEach(b => {
-            ctx.save();
-            ctx.translate(b.x, b.y);
-
-            ctx.fillStyle = "rgba(10, 20, 15, 0.92)";
-            ctx.strokeStyle = b.border;
-            ctx.lineWidth = 1.2;
-            ctx.beginPath();
-            const bw = b.w, bh = b.h;
-            if (ctx.roundRect) {
-                ctx.roundRect(-bw / 2, -bh / 2, bw, bh, 5);
-            } else {
-                ctx.rect(-bw / 2, -bh / 2, bw, bh);
-            }
-            ctx.fill();
-            ctx.stroke();
-
-            ctx.shadowColor = b.border;
-            ctx.shadowBlur = 6;
-            ctx.fillStyle = b.border;
-            ctx.fillRect(-bw / 2 + 3, -bh / 2 + 1, bw - 6, 2);
-
-            ctx.shadowBlur = 0;
-            ctx.font = "bold 9.5px 'Plus Jakarta Sans', sans-serif";
-            ctx.fillStyle = b.color;
-            ctx.textAlign = "center";
-            ctx.textBaseline = "middle";
-            ctx.fillText(b.label, 0, 1);
-
-            ctx.restore();
-        });
-
-        // Sleek modern glowing geometric shield (no text clutter)
-        if ((state === "playing" || state === "idle") && paddle) {
-            ctx.save();
-            ctx.translate(paddle.x, paddle.y);
-
-            ctx.shadowColor = "#00ff88";
-            ctx.shadowBlur = 16;
-
-            ctx.fillStyle = "rgba(16, 185, 129, 0.35)";
-            ctx.strokeStyle = "#00ff88";
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            const pw = paddle.w, ph = paddle.h;
-            if (ctx.roundRect) {
-                ctx.roundRect(-pw / 2, -ph / 2, pw, ph, 8);
-            } else {
-                ctx.rect(-pw / 2, -ph / 2, pw, ph);
-            }
-            ctx.fill();
-            ctx.stroke();
-
-            // Polished glowing energy core
-            ctx.shadowBlur = 8;
-            ctx.shadowColor = "#ffffff";
-            ctx.fillStyle = "#ffffff";
-            if (ctx.roundRect) {
-                ctx.beginPath();
-                ctx.roundRect(-14, -2, 28, 4, 2);
-                ctx.fill();
-            } else {
-                ctx.fillRect(-14, -2, 28, 4);
-            }
-
-            ctx.restore();
-        }
-
-        particles.forEach(p => {
-            ctx.save();
-            ctx.globalAlpha = p.life;
-            ctx.fillStyle = p.color;
-            ctx.shadowColor = p.color;
-            ctx.shadowBlur = 5;
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.restore();
-        });
-
-        texts.forEach(t => {
-            ctx.save();
-            ctx.globalAlpha = t.life;
-            ctx.font = "bold 10px 'Plus Jakarta Sans', sans-serif";
-            ctx.fillStyle = t.color;
-            ctx.textAlign = "center";
-            ctx.shadowColor = t.color;
-            ctx.shadowBlur = 4;
-            ctx.fillText(t.text, t.x, t.y);
-            ctx.restore();
-        });
-    }
-
-    function renderGameOverlay(title, subtitle, color) {
-        ctx.save();
-        ctx.fillStyle = "rgba(5, 11, 8, 0.88)";
-        ctx.fillRect(0, 0, W, H);
-
-        ctx.font = "700 20px 'Plus Jakarta Sans', sans-serif";
+    function drawCell(x, y, color, shrink = 1) {
         ctx.fillStyle = color;
-        ctx.textAlign = "center";
-        ctx.shadowColor = color;
-        ctx.shadowBlur = 14;
-        ctx.fillText(title, W / 2, H / 2 - 12);
-
-        ctx.shadowBlur = 0;
-        ctx.font = "500 12px 'Plus Jakarta Sans', sans-serif";
-        ctx.fillStyle = "#94a3b8";
-        ctx.fillText(subtitle, W / 2, H / 2 + 16);
-
-        ctx.restore();
+        ctx.fillRect(
+            x * CELL + shrink,
+            y * CELL + shrink,
+            CELL - shrink * 2,
+            CELL - shrink * 2
+        );
     }
 
-    document.addEventListener("keydown", (e) => {
-        keys[e.key] = true;
-        if (e.key === " " && state === "playing") {
-            e.preventDefault();
+    function render() {
+        // LCD background
+        ctx.fillStyle = BG_COLOR;
+        ctx.fillRect(0, 0, cv.width, cv.height);
+
+        // Subtle pixel grid
+        ctx.strokeStyle = GRID_COLOR;
+        ctx.lineWidth = 0.5;
+        for (let x = 0; x <= COLS; x++) {
+            ctx.beginPath(); ctx.moveTo(x * CELL, 0); ctx.lineTo(x * CELL, cv.height); ctx.stroke();
         }
-    });
+        for (let y = 0; y <= ROWS; y++) {
+            ctx.beginPath(); ctx.moveTo(0, y * CELL); ctx.lineTo(cv.width, y * CELL); ctx.stroke();
+        }
 
-    document.addEventListener("keyup", (e) => {
-        keys[e.key] = false;
-    });
+        // Snake
+        snake.forEach((seg, i) => {
+            const alpha = i === 0 ? 1 : 0.85 - (i / snake.length) * 0.2;
+            ctx.globalAlpha = alpha;
+            drawCell(seg.x, seg.y, SNAKE_COLOR, i === 0 ? 0.5 : 1);
+        });
+        ctx.globalAlpha = 1;
 
-    window.mobileKey = function (k, isDown) {
-        keys[k] = isDown;
-        if (isDown && k === " ") {
-            shootLaser();
+        // Head eyes
+        if (snake.length > 0 && state !== 'dead') {
+            const h = snake[0];
+            ctx.fillStyle = BG_COLOR;
+            const ex = h.x * CELL, ey = h.y * CELL;
+            if (dir === 'RIGHT' || dir === 'LEFT') {
+                const ox = dir === 'RIGHT' ? 6 : 2;
+                ctx.fillRect(ex + ox, ey + 2, 2, 2);
+                ctx.fillRect(ex + ox, ey + 6, 2, 2);
+            } else {
+                const oy = dir === 'DOWN' ? 6 : 2;
+                ctx.fillRect(ex + 2, ey + oy, 2, 2);
+                ctx.fillRect(ex + 6, ey + oy, 2, 2);
+            }
+        }
+
+        // Food â€” blinking star shape
+        const blink = (Math.floor(Date.now() / 300) % 2 === 0);
+        if (blink) {
+            ctx.fillStyle = FOOD_COLOR;
+            // cross/plus shape
+            ctx.fillRect(food.x * CELL + 3, food.y * CELL + 1, 4, 8);
+            ctx.fillRect(food.x * CELL + 1, food.y * CELL + 3, 8, 4);
+        }
+
+        // Bonus food
+        if (bonus) {
+            const bb = Math.floor(Date.now() / 150) % 2 === 0;
+            if (bb) {
+                ctx.fillStyle = BONUS_COLOR;
+                ctx.beginPath();
+                ctx.arc(bonus.x * CELL + 5, bonus.y * CELL + 5, 4, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        // Overlays
+        if (state === 'idle') {
+            drawOverlay('SNAKE', 'Press START or Enter', '#1a1a1a');
+        } else if (state === 'paused') {
+            drawOverlay('PAUSED', 'Press START to resume', '#1a1a1a');
+        } else if (state === 'dead') {
+            drawOverlay('GAME OVER', `Score: ${score}  â€¢  Press START`, DEAD_COLOR);
+        }
+    }
+
+    function drawOverlay(title, sub, color) {
+        ctx.fillStyle = 'rgba(139, 168, 122, 0.82)';
+        ctx.fillRect(0, cv.height / 2 - 28, cv.width, 56);
+
+        ctx.font = 'bold 14px monospace';
+        ctx.fillStyle = color;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(title, cv.width / 2, cv.height / 2 - 8);
+
+        ctx.font = '9px monospace';
+        ctx.fillStyle = '#1a1a1a';
+        ctx.fillText(sub, cv.width / 2, cv.height / 2 + 10);
+
+        ctx.textAlign = 'left';
+    }
+
+    // â”€â”€ Main loop â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    function loop(ts) {
+        raf = requestAnimationFrame(loop);
+        if (state === 'playing') {
+            if (ts - lastTick >= tickInterval()) {
+                lastTick = ts;
+                tick();
+            }
+        }
+        render();
+    }
+
+    // â”€â”€ Public API (called from HTML buttons / keyboard) â”€â”€
+    window.startSnakeGame = function () {
+        reset();
+        state = 'playing';
+        lastTick = performance.now();
+        if (!raf) loop(lastTick);
+    };
+
+    window.pauseSnakeGame = function () {
+        if (state === 'playing') state = 'paused';
+        else if (state === 'paused') { state = 'playing'; lastTick = performance.now(); }
+    };
+
+    window.onDpadCenter = function () {
+        if (state === 'idle' || state === 'dead') {
+            window.startSnakeGame();
+        } else {
+            window.pauseSnakeGame();
         }
     };
 
-    initPaddle();
-    updateHud();
-    loop();
+    window.setSnakeDir = function (d) {
+        if (state !== 'playing') {
+            if (state === 'idle' || state === 'dead') window.startSnakeGame();
+            return;
+        }
+        const opposites = { UP: 'DOWN', DOWN: 'UP', LEFT: 'RIGHT', RIGHT: 'LEFT' };
+        if (opposites[d] !== dir) nextDir = d;
+    };
+
+    // â”€â”€ Keyboard â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    document.addEventListener('keydown', (e) => {
+        const map = {
+            ArrowUp: 'UP', ArrowDown: 'DOWN', ArrowLeft: 'LEFT', ArrowRight: 'RIGHT',
+            w: 'UP', W: 'UP', s: 'DOWN', S: 'DOWN', a: 'LEFT', A: 'LEFT', d: 'RIGHT', D: 'RIGHT'
+        };
+        if (map[e.key]) {
+            e.preventDefault();
+            window.setSnakeDir(map[e.key]);
+        }
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            window.onDpadCenter();
+        }
+        if (e.key === 'Escape') window.pauseSnakeGame();
+    });
+
+    // â”€â”€ Swipe gestures on canvas â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    let touchStartX = 0, touchStartY = 0;
+    cv.addEventListener('touchstart', (e) => {
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+        e.preventDefault();
+    }, { passive: false });
+
+    cv.addEventListener('touchend', (e) => {
+        const dx = e.changedTouches[0].clientX - touchStartX;
+        const dy = e.changedTouches[0].clientY - touchStartY;
+        const absDx = Math.abs(dx), absDy = Math.abs(dy);
+        if (absDx < 8 && absDy < 8) {
+            // tap â†’ toggle start/pause
+            window.onDpadCenter();
+            return;
+        }
+        if (absDx > absDy) {
+            window.setSnakeDir(dx > 0 ? 'RIGHT' : 'LEFT');
+        } else {
+            window.setSnakeDir(dy > 0 ? 'DOWN' : 'UP');
+        }
+        e.preventDefault();
+    }, { passive: false });
+
+    // â”€â”€ Boot idle loop â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    reset();
+    loop(performance.now());
 })();
+
+
 
 /* ====================================================
    4. SCROLL REVEAL OBSERVER (MENGGERAKKAN ELEMEN .r)
@@ -938,9 +889,9 @@ document.querySelectorAll('.r').forEach((element) => {
 /**
  * filterExperience(category, buttonElement)
  * Filters the experience section by category:
- *   'all'  → shows everything
- *   'tech' → shows only the UNSIA flagship card
- *   'lead' → shows only the 3-card leadership grid
+ *   'all'  â†’ shows everything
+ *   'tech' â†’ shows only the UNSIA flagship card
+ *   'lead' â†’ shows only the 3-card leadership grid
  */
 function filterExperience(category, buttonElement) {
     // 1. Update active pill state
@@ -1092,7 +1043,7 @@ async function submitForm(event) {
         if (result.success) {
             statBox.className = "term-status-box ok";
             statBox.style.display = "block";
-            statBox.textContent = "✓ Pesan berhasil terkirim! Terima kasih, saya akan segera menghubungi Anda dalam < 24 jam.";
+            statBox.textContent = "âœ“ Pesan berhasil terkirim! Terima kasih, saya akan segera menghubungi Anda dalam < 24 jam.";
             form.reset();
 
             // Kembalikan tombol topik ke default
@@ -1121,7 +1072,7 @@ async function submitForm(event) {
 }
 
 /* ====================================================
-   COPY EMAIL TO CLIPBOARD — Interactive Email Card
+   COPY EMAIL TO CLIPBOARD â€” Interactive Email Card
    ==================================================== */
 function copyEmail(cardEl) {
     const email = 'abdulziyadalhadi@gmail.com';
@@ -1130,12 +1081,12 @@ function copyEmail(cardEl) {
     const onSuccess = () => {
         // Visual feedback on the card
         cardEl.classList.add('copied');
-        if (metaEl) metaEl.textContent = '✓ Berhasil disalin ke clipboard!';
+        if (metaEl) metaEl.textContent = 'âœ“ Berhasil disalin ke clipboard!';
 
         // Reset after 2.5 s
         setTimeout(() => {
             cardEl.classList.remove('copied');
-            if (metaEl) metaEl.textContent = 'Klik untuk salin · Surat formal & Dokumen brief';
+            if (metaEl) metaEl.textContent = 'Klik untuk salin Â· Surat formal & Dokumen brief';
         }, 2500);
     };
 
@@ -1352,7 +1303,7 @@ function copyTipNumber(boxEl) {
 
     const showSuccess = () => {
         boxEl.classList.add('copied');
-        if (copyTxt) copyTxt.textContent = "Tersalin! ✓";
+        if (copyTxt) copyTxt.textContent = "Tersalin! âœ“";
         setTimeout(() => {
             boxEl.classList.remove('copied');
             if (copyTxt) copyTxt.textContent = "Salin";
@@ -1374,3 +1325,44 @@ window.closeTipModal = closeTipModal;
 window.handleTipBackdropClick = handleTipBackdropClick;
 window.switchTipQr = switchTipQr;
 window.copyTipNumber = copyTipNumber;
+
+/* ====================================================
+   FOOTER ENHANCEMENTS: LIVE JAKARTA TIME & SCROLL TOP
+   ==================================================== */
+function updateJakartaClock() {
+    const clockEl = document.getElementById('liveJakartaTime');
+    if (!clockEl) return;
+
+    try {
+        const now = new Date();
+        const options = {
+            timeZone: 'Asia/Jakarta',
+            hour12: false,
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        };
+        const formatter = new Intl.DateTimeFormat('id-ID', options);
+        clockEl.textContent = formatter.format(now) + ' WIB';
+    } catch (_) {
+        // Fallback calculation
+        const now = new Date();
+        const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+        const wib = new Date(utc + (3600000 * 7));
+        const pad = (n) => String(n).padStart(2, '0');
+        clockEl.textContent = `${pad(wib.getHours())}:${pad(wib.getMinutes())}:${pad(wib.getSeconds())} WIB`;
+    }
+}
+
+// Update clock every second
+setInterval(updateJakartaClock, 1000);
+updateJakartaClock();
+
+function scrollToTop() {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+}
+window.scrollToTop = scrollToTop;
+

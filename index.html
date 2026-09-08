@@ -1,0 +1,1729 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Abdul Ziyad Al Hadi | Web Developer & Software QA</title>
+
+    <!-- Google Fonts: Plus Jakarta Sans & Lora (Serif Italic khas editorial) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400;1,500&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+
+    <!-- Font Awesome untuk Icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <!-- Three.js CDN untuk Efek 3D Background -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <!-- Hubungkan ke style.css -->
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+    <!-- ═══ PRELOADER — LUXURY CINEMATIC "JAY" INTRO ═══ -->
+    <div id="preloader" aria-hidden="true">
+        <div class="preloader-content">
+            <div class="jay-logo-wrap">
+                <!-- SVG Stroke-Tracing Letters -->
+                <svg class="jay-svg" viewBox="0 0 340 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <text x="50%" y="68%" text-anchor="middle" class="jay-trace-text">JAY</text>
+                </svg>
+                <!-- Glossy Sheen Fill Overlay -->
+                <div class="jay-gloss-overlay">JAY</div>
+            </div>
+            <!-- Expanding Baseline -->
+            <div class="preloader-line"></div>
+        </div>
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- 1. NAVBAR DENGAN MUSIC PLAYER              -->
+    <!-- ========================================== -->
+    <nav id="nav">
+        <a href="#home" class="logo"><b>Abdul Ziyad</b> Al Hadi</a>
+
+        <!-- Pemutar Musik di Tengah Navbar -->
+        <div id="musicPlayer">
+            <button onclick="prevSong()" id="prevBtn" title="Lagu sebelumnya">
+                <i class="fas fa-backward"></i>
+            </button>
+            <button onclick="toggleMusic()" id="musicBtn" title="Putar/Jeda">
+                <i class="fas fa-play" id="musicIcon"></i>
+            </button>
+            <button onclick="nextSong()" id="nextBtn" title="Lagu berikutnya">
+                <i class="fas fa-forward"></i>
+            </button>
+            <span id="songTitle">Memuat Musik...</span>
+        </div>
+
+        <!-- Menu Navigasi -->
+        <ul class="nlinks" id="nl">
+            <!-- Sliding Pill Indicator (Apple/Linear style) -->
+            <li id="navIndicator" aria-hidden="true"></li>
+            <li><a href="#home" class="active">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#experience">Experience</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+
+        <!-- Tombol Hamburger Mobile -->
+        <div class="hbg" id="hbg" onclick="toggleNav()">
+            <span></span><span></span><span></span>
+        </div>
+    </nav>
+
+    <!-- Tag Audio (Tersembunyi) -->
+    <audio id="bgMusic" loop></audio>
+
+    <!-- ========================================== -->
+    <!-- 2. HERO SECTION — CYBER COMMAND COCKPIT    -->
+    <!-- ========================================== -->
+    <section id="home">
+        <!-- Three.js 3D Neural Graph Canvas (stays absolute behind everything) -->
+        <canvas id="three-canvas"></canvas>
+        <!-- Bottom vignette fade to next section -->
+        <div class="hfade"></div>
+
+        <!-- ─── HERO NARRATIVE — CENTERED SINGLE COLUMN ─── -->
+        <div class="hero-narrative">
+
+            <!-- Status Node -->
+            <div class="hero-status-node">
+                <span class="hero-live-dot"></span>
+                <span>Lulusan RPL 2026 · Ex Magang UNSIA</span>
+            </div>
+
+            <!-- Main Headline -->
+            <h1 class="hero">
+                Membangun Web Berperforma Tinggi<br />dengan Presisi <em>Software QA</em>.
+            </h1>
+
+            <!-- Value Proposition -->
+            <p class="hsub">
+                Lulusan Rekayasa Perangkat Lunak SMK Negeri 64 Jakarta dengan pengalaman magang industri 6 bulan di
+                <strong>Universitas Siber Asia (UNSIA)</strong>. Mengembangkan aplikasi web berbasis
+                <strong>Laravel 12</strong> &amp; <strong>React.js</strong> serta menerapkan metodologi pengujian
+                kualitas (Software QA) yang terstruktur dan reliabel.
+            </p>
+
+            <!-- Micro-Tech Ribbon Pills -->
+            <div class="hero-ribbon">
+                <span class="hribbon-pill"><i class="fas fa-code"></i> Laravel 12</span>
+                <span class="hribbon-pill"><i class="fab fa-react"></i> React.js</span>
+                <span class="hribbon-pill hribbon-qa"><i class="fas fa-shield-halved"></i> Software QA</span>
+                <span class="hribbon-pill"><i class="fas fa-database"></i> MySQL</span>
+                <span class="hribbon-pill"><i class="fab fa-css3-alt"></i> Tailwind CSS</span>
+            </div>
+
+            <!-- CTA Row -->
+            <div class="hacts">
+                <a href="assets/CV.png" download="CV_Abdul_Ziyad_Al_Hadi.png" class="btn bb" id="btnDownloadCV">
+                    <i class="fas fa-file-arrow-down"></i> Unduh CV
+                </a>
+                <a href="#contact" class="btn bg">
+                    <i class="fas fa-comments"></i> Mulai Diskusi
+                </a>
+            </div>
+        </div><!-- /.hero-narrative -->
+
+        <!-- Scroll Indicator -->
+        <div class="hscroll">
+            <span>SCROLL TO EXPLORE</span>
+            <div class="sdot"></div>
+        </div>
+
+    </section>
+
+    <!-- ========================================== -->
+    <!-- SECTION GAME — BUG BUSTER INTERACTIVE LAB  -->
+    <!-- ========================================== -->
+    <section id="game">
+        <div class="inner">
+            <div class="lbl r">— INTERACTIVE CORNER</div>
+            <h2 class="st r d1">Bug Buster <em>Mini Game</em></h2>
+            <div class="sep r d2"></div>
+            <p class="game-sub r d2">Ujian refleks QA engineer sejati — tembak semua bug sebelum mereka lolos ke
+                production!</p>
+
+            <!-- Game Console Card -->
+            <div class="game-console-wrap r d1" id="gameConsoleWrap">
+
+                <!-- Console Chrome Header -->
+                <div class="qa-console-top">
+                    <div class="dots">
+                        <span></span><span></span><span></span>
+                    </div>
+                    <div class="qa-console-title">
+                        <i class="fas fa-gamepad"></i>
+                        Bug Buster · QA Arena
+                    </div>
+                    <div class="gscore">
+                        Skor: <b id="sc">0</b> &nbsp;|&nbsp; Nyawa: <b id="lv">3/3</b>
+                    </div>
+                </div>
+
+                <!-- Game Canvas -->
+                <canvas id="gameCanvas" width="700" height="340"></canvas>
+
+                <!-- Mobile Touch Controls -->
+                <div class="gmobile-controls">
+                    <div class="gctrl-row">
+                        <button class="gctrl-btn" ontouchstart="mobileKey('ArrowLeft',true)"
+                            ontouchend="mobileKey('ArrowLeft',false)" onmousedown="mobileKey('ArrowLeft', true)"
+                            onmouseup="mobileKey('ArrowLeft', false)">
+                            <i class="fas fa-arrow-left"></i> Kiri
+                        </button>
+                        <button class="gctrl-btn gctrl-shoot" ontouchstart="mobileKey(' ',true)"
+                            ontouchend="mobileKey(' ',false)" onmousedown="mobileKey(' ', true)"
+                            onmouseup="mobileKey(' ', false)">
+                            <i class="fas fa-crosshairs"></i> Tembak
+                        </button>
+                        <button class="gctrl-btn" ontouchstart="mobileKey('ArrowRight',true)"
+                            ontouchend="mobileKey('ArrowRight',false)" onmousedown="mobileKey('ArrowRight', true)"
+                            onmouseup="mobileKey('ArrowRight', false)">
+                            Kanan <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Console Footer -->
+                <div class="gfoot">
+                    <div class="ghint">
+                        <i class="fas fa-keyboard"></i> Tombol panah untuk bergerak · Spasi untuk menembak
+                    </div>
+                    <button class="gbtn" onclick="startGame()" id="startGameBtn">
+                        <i class="fas fa-play"></i> Mulai Bermain
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- SECTION ABOUT (MODULAR BENTO GRID)         -->
+    <!-- ========================================== -->
+    <section id="about">
+        <div class="inner">
+            <!-- Label & Judul Section -->
+            <div class="lbl r">— TENTANG SAYA</div>
+            <h2 class="st r d1">Tentang <em>Saya</em></h2>
+            <div class="sep r d2"></div>
+
+            <!-- Bento Grid 12 Kolom -->
+            <div class="bento-grid">
+
+                <!-- CARD A: HERO BIO & IDENTITY (Span 7 cols) -->
+                <div class="bcard bcard-hero r d1">
+                    <div class="bcard-header">
+                        <span class="bcard-tag">Tentang Saya</span>
+                        <div class="status-badge">
+                            <span class="dot-green pulse"></span>
+                            <span class="status-txt">Tersedia untuk Proyek &amp; Pekerjaan</span>
+                        </div>
+                    </div>
+
+                    <div class="bhero-profile">
+                        <div class="bsquircle-avt">
+                            <img src="assets/jayfoto.jpeg" alt="Abdul Ziyad Al Hadi" id="profileImg" />
+                        </div>
+                        <div class="bhero-meta">
+                            <h3 class="bhero-name">Abdul Ziyad Al Hadi</h3>
+                            <div class="bhero-sub">
+                                <span class="bhero-role">Web Developer &amp; Software QA</span>
+                                <span class="bhero-loc"><i class="fas fa-map-marker-alt"></i> Jakarta Timur, ID</span>
+                            </div>
+                            <div class="bhero-edu">
+                                <i class="fas fa-graduation-cap"></i>
+                                <span>SMK Negeri 64 Jakarta · Rekayasa Perangkat Lunak (2023–2026)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bhero-bio">
+                        <p>
+                            Menyatukan presisi arsitektur web modern dengan ketelitian pengujian mutu perangkat lunak.
+                            Sebagai <strong>Web Developer &amp; Software QA</strong>, saya berfokus merancang
+                            fungsionalitas
+                            sistem yang kokoh dengan <strong>Laravel</strong> dan <strong>React.js</strong>, sekaligus
+                            menerapkan standar pengetesan manual dan validasi yang ketat agar aplikasi andal bebas celah
+                            di
+                            lingkungan produksi.
+                        </p>
+                    </div>
+
+                    <div class="bhero-footer">
+                        <div class="bhero-meta-item">
+                            <i class="fas fa-code-commit"></i>
+                            <span>Fokus: Full Stack Reliability &amp; QA Standards</span>
+                        </div>
+                        <div class="bhero-meta-item">
+                            <i class="fas fa-users-gear"></i>
+                            <span>Kepemimpinan Tim Teruji (Futsal &amp; Humas)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CARD B: EXPERIENCE SNAPSHOT / THE UNSIA JOURNEY (Span 5 cols) -->
+                <div class="bcard bcard-exp r d2">
+                    <div class="bcard-header">
+                        <span class="bcard-tag">Pengalaman Industri</span>
+                        <span class="bcard-pill">Magang 6 Bulan</span>
+                    </div>
+
+                    <div class="bexp-company">
+                        <div class="bexp-icon"><i class="fas fa-building-columns"></i></div>
+                        <div>
+                            <h4 class="bexp-title">Universitas Siber Asia (UNSIA)</h4>
+                            <span class="bexp-period">Januari 2026 — Juni 2026 · Kampus Siber</span>
+                        </div>
+                    </div>
+
+                    <div class="bexp-role-badge">
+                        <i class="fas fa-shield-halved"></i> Web Developer &amp; QA Intern
+                    </div>
+
+                    <div class="bexp-logs">
+                        <div class="blog-item">
+                            <span class="blog-key"><i class="fas fa-layer-group"></i> Sistem CRM Kampus</span>
+                            <p>Merancang modul <strong>Customer Relationship Management (CRM)</strong> kampus berbasis
+                                Laravel, React.js, &amp; MySQL.</p>
+                        </div>
+                        <div class="blog-item">
+                            <span class="blog-key"><i class="fas fa-vial-circle-check"></i> Software QA &amp;
+                                Testing</span>
+                            <p>Eksekusi manual testing terstruktur, validasi skenario edge case, serta dokumentasi bug
+                                tracking sistematis.</p>
+                        </div>
+                        <div class="blog-item">
+                            <span class="blog-key"><i class="fas fa-screwdriver-wrench"></i> Optimasi &amp; Problem
+                                Solving</span>
+                            <p>Analisis logika query relasional &amp; penelusuran akar masalah <em>(root cause
+                                    error)</em> secara efisien.</p>
+                        </div>
+                    </div>
+
+                    <div class="bexp-footer">
+                        <span class="bstatus-verified"><i class="fas fa-circle-check"></i> Industrial Internship
+                            Verified</span>
+                    </div>
+                </div>
+
+                <!-- CARD C: CATEGORIZED SKILL MATRIX (Span 8 cols) -->
+                <div class="bcard bcard-matrix r d1">
+                    <div class="bcard-header">
+                        <span class="bcard-tag">Keahlian &amp; Teknologi</span>
+                        <span class="bcard-pill">Siap Produksi</span>
+                    </div>
+
+                    <div class="bmatrix-groups">
+                        <!-- Micro Group 1: Full-Stack Core -->
+                        <div class="bmat-group">
+                            <div class="bmat-head">
+                                <div class="bmat-icon"><i class="fas fa-layer-group"></i></div>
+                                <div>
+                                    <h5 class="bmat-title">Full Stack Core</h5>
+                                    <span class="bmat-sub">Arsitektur Web &amp; Logika Komputasi</span>
+                                </div>
+                            </div>
+                            <div class="bchips">
+                                <span class="bchip"><i class="fab fa-laravel"></i> Laravel</span>
+                                <span class="bchip"><i class="fab fa-react"></i> React.js</span>
+                                <span class="bchip"><i class="fab fa-js"></i> TypeScript</span>
+                                <span class="bchip"><i class="fab fa-php"></i> PHP</span>
+                                <span class="bchip"><i class="fas fa-database"></i> MySQL</span>
+                            </div>
+                        </div>
+
+                        <!-- Micro Group 2: QA & Testing -->
+                        <div class="bmat-group">
+                            <div class="bmat-head">
+                                <div class="bmat-icon"><i class="fas fa-bug-slash"></i></div>
+                                <div>
+                                    <h5 class="bmat-title">QA &amp; Testing</h5>
+                                    <span class="bmat-sub">Standar Validasi &amp; Pengujian Mutu</span>
+                                </div>
+                            </div>
+                            <div class="bchips">
+                                <span class="bchip highlight"><i class="fas fa-clipboard-check"></i> Manual QA</span>
+                                <span class="bchip highlight"><i class="fas fa-file-lines"></i> Bug Reporting</span>
+                                <span class="bchip highlight"><i class="fas fa-shield-virus"></i> Edge Case
+                                    Validation</span>
+                                <span class="bchip highlight"><i class="fas fa-microchip"></i> AI Assisted Debug</span>
+                            </div>
+                        </div>
+
+                        <!-- Micro Group 3: Ecosystem & Workflow -->
+                        <div class="bmat-group">
+                            <div class="bmat-head">
+                                <div class="bmat-icon"><i class="fas fa-network-wired"></i></div>
+                                <div>
+                                    <h5 class="bmat-title">Ecosystem &amp; Workflow</h5>
+                                    <span class="bmat-sub">Lingkungan Kerja &amp; Version Control</span>
+                                </div>
+                            </div>
+                            <div class="bchips">
+                                <span class="bchip"><i class="fab fa-css3-alt"></i> Tailwind CSS</span>
+                                <span class="bchip"><i class="fab fa-git-alt"></i> Git &amp; GitHub</span>
+                                <span class="bchip"><i class="fas fa-server"></i> Laragon</span>
+                                <span class="bchip"><i class="fab fa-wordpress"></i> WordPress</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CARD D: INTERACTIVE METRICS & LEADERSHIP (Span 4 cols) -->
+                <div class="bcard bcard-stats r d2">
+                    <div class="bcard-header">
+                        <span class="bcard-tag">Pencapaian &amp; Kepemimpinan</span>
+                    </div>
+
+                    <div class="bstats-grid">
+                        <div class="bstat-box bstat-clickable" onclick="openCertModal(1)"
+                            onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openCertModal(1);}"
+                            title="Lihat Sertifikat Magang Industri UNSIA (6 Bulan)" role="button" tabindex="0">
+                            <div class="bstat-num">6 Month <i
+                                    class="fas fa-arrow-up-right-from-square bstat-corner-icon"></i></div>
+                            <div class="bstat-label">Industrial Immersion</div>
+                            <div class="bstat-desc">UNSIA CRM Development</div>
+                        </div>
+
+                        <div class="bstat-box bstat-clickable" onclick="openCertModal(0)"
+                            onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openCertModal(0);}"
+                            title="Lihat Sertifikat Kompetensi BNSP Junior Programmer" role="button" tabindex="0">
+                            <div class="bstat-num">USK <i
+                                    class="fas fa-arrow-up-right-from-square bstat-corner-icon"></i></div>
+                            <div class="bstat-label">Certified Competence</div>
+                            <div class="bstat-desc">Uji Sertifikasi BNSP Resmi</div>
+                        </div>
+
+                        <div class="bstat-box">
+                            <div class="bstat-num">3+ Yrs</div>
+                            <div class="bstat-label">Engineering Foundation</div>
+                            <div class="bstat-desc">RPL SMKN 64 Jakarta</div>
+                        </div>
+
+                        <div class="bstat-box">
+                            <div class="bstat-num">Lead</div>
+                            <div class="bstat-label">Leadership Experience</div>
+                            <div class="bstat-desc">Futsal Captain &amp; Humas</div>
+                        </div>
+                    </div>
+
+                    <div class="bcard-cert-action">
+                        <button type="button" class="btn-cert-modal" onclick="openCertModal(0)"
+                            aria-label="Lihat 3 Kredensial &amp; Sertifikat Resmi">
+                            <i class="fas fa-certificate"></i>
+                            <span>Lihat 3 Sertifikat Resmi</span>
+                            <i class="fas fa-arrow-up-right-from-square"></i>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- SECTION EXPERIENCE (DUAL-STREAM CAREER LOG) -->
+    <!-- ========================================== -->
+    <section id="experience">
+        <div class="inner">
+            <!-- Label & Judul Section -->
+            <div class="lbl r">— CAREER LOG</div>
+            <h2 class="st r d1">Pengalaman <em>Saya</em></h2>
+            <div class="sep r d2"></div>
+
+            <!-- FILTER CONTROLS -->
+            <div class="exp-filters r" id="expFilters">
+                <button class="exp-filter-btn active" id="expFilterAll" onclick="filterExperience('all', this)">
+                    <i class="fas fa-layer-group"></i> Semua Pengalaman
+                </button>
+                <button class="exp-filter-btn" id="expFilterTech" onclick="filterExperience('tech', this)">
+                    <i class="fas fa-code"></i> Teknikal &amp; Industri
+                </button>
+                <button class="exp-filter-btn" id="expFilterLead" onclick="filterExperience('lead', this)">
+                    <i class="fas fa-users"></i> Kepemimpinan &amp; Organisasi
+                </button>
+            </div>
+
+            <!-- EXPERIENCE STREAM -->
+            <div class="exp-stream" id="expStream">
+
+                <!-- ================================================= -->
+                <!-- A. FEATURED FLAGSHIP CARD — UNSIA INTERNSHIP (tech) -->
+                <!-- ================================================= -->
+                <div class="exp-flagship r" data-exp-cat="tech" id="expCardUnsia">
+                    <!-- Top bar -->
+                    <div class="eflag-topbar">
+                        <div class="eflag-badge">
+                            <span class="eflag-dot"></span>
+                            <span>&#9733; Verified Industrial Internship &middot; 6 Bulan</span>
+                        </div>
+                        <div class="eflag-meta">
+                            <span class="eflag-duration"><i class="fas fa-calendar-alt"></i> Januari 2026 – Juni
+                                2026</span>
+                            <span class="eflag-loc"><i class="fas fa-map-marker-alt"></i> Jakarta</span>
+                        </div>
+                    </div>
+
+                    <!-- Role & Org -->
+                    <div class="eflag-identity">
+                        <div class="eflag-icon-wrap">
+                            <i class="fas fa-building-columns"></i>
+                        </div>
+                        <div>
+                            <h3 class="eflag-role">Web Developer &amp; Software Quality Assurance (QA) Intern</h3>
+                            <div class="eflag-org">Universitas Siber Asia (UNSIA)</div>
+                        </div>
+                    </div>
+
+                    <!-- Narrative -->
+                    <p class="eflag-summary">
+                        Menjalani Praktik Kerja Lapangan (PKL) industri selama 6 bulan penuh di lingkungan kampus
+                        berbasis siber. Berperan aktif dalam siklus pengembangan penuh sistem <strong>CRM</strong>
+                        kampus dari perancangan modul hingga pengujian mutu menggunakan stack modern dan standar QA yang
+                        sistematis, sekaligus memanfaatkan AI untuk akselerasi root cause analysis.
+                    </p>
+
+                    <!-- 3 Impact Highlights -->
+                    <div class="eflag-impacts">
+                        <div class="eflag-impact-node">
+                            <div class="eflag-impact-icon"><i class="fas fa-database"></i></div>
+                            <div>
+                                <div class="eflag-impact-title">CRM Core Engine</div>
+                                <div class="eflag-impact-desc">Built &amp; maintained university CRM modules with
+                                    Laravel, React.js &amp; Tailwind CSS pada lingkungan produksi kampus.</div>
+                            </div>
+                        </div>
+                        <div class="eflag-impact-node">
+                            <div class="eflag-impact-icon"><i class="fas fa-shield-halved"></i></div>
+                            <div>
+                                <div class="eflag-impact-title">QA Reliability</div>
+                                <div class="eflag-impact-desc">Executed systematic manual testing, functional validation
+                                    &amp; structured bug reporting across all CRM modules.</div>
+                            </div>
+                        </div>
+                        <div class="eflag-impact-node">
+                            <div class="eflag-impact-icon"><i class="fas fa-brain"></i></div>
+                            <div>
+                                <div class="eflag-impact-title">AI Assisted Debug</div>
+                                <div class="eflag-impact-desc">Accelerated root cause issue analysis &amp; relational
+                                    query optimization menggunakan AI tools.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tech Stack Tags -->
+                    <div class="eflag-stack">
+                        <span class="eflag-tag"><i class="fab fa-laravel"></i> Laravel</span>
+                        <span class="eflag-tag"><i class="fab fa-react"></i> React.js</span>
+                        <span class="eflag-tag"><i class="fas fa-wind"></i> Tailwind CSS</span>
+                        <span class="eflag-tag"><i class="fas fa-database"></i> MySQL</span>
+                        <span class="eflag-tag"><i class="fas fa-clipboard-check"></i> Manual QA</span>
+                        <span class="eflag-tag"><i class="fas fa-bug"></i> Bug Reporting</span>
+                        <span class="eflag-tag"><i class="fab fa-git-alt"></i> Git</span>
+                    </div>
+                </div>
+
+                <!-- ========================================= -->
+                <!-- B. LEADERSHIP & ORGANIZATION GRID (lead) -->
+                <!-- ========================================= -->
+                <div class="exp-lead-grid" id="expLeadGrid">
+
+                    <!-- CARD 1: KETUA FUTSAL -->
+                    <div class="exp-lead-card r d1" data-exp-cat="lead" id="expCardFutsal">
+                        <div class="elc-header">
+                            <div class="elc-icon"><i class="fas fa-futbol"></i></div>
+                            <span class="elc-badge">Leadership &amp; Strategy</span>
+                        </div>
+                        <h4 class="elc-role">Ketua Ekstrakurikuler Futsal</h4>
+                        <div class="elc-org">
+                            <i class="fas fa-school"></i> SMKN 64 Jakarta
+                            <span class="elc-period">2024 – 2025</span>
+                        </div>
+                        <div class="elc-divider"></div>
+                        <ul class="elc-achievements">
+                            <li><i class="fas fa-chevron-right"></i> Memimpin 30+ anggota aktif dalam program kerja
+                                organisasi.</li>
+                            <li><i class="fas fa-chevron-right"></i> Menyusun jadwal latihan mingguan &amp; strategi
+                                turnamen kompetitif.</li>
+                            <li><i class="fas fa-chevron-right"></i> Koordinasi tim dengan kesiswaan, pelatih &amp;
+                                anggota.</li>
+                        </ul>
+                        <div class="elc-tags">
+                            <span class="elc-tag">Leadership</span>
+                            <span class="elc-tag">Team Management</span>
+                            <span class="elc-tag">Strategic Planning</span>
+                        </div>
+                    </div>
+
+                    <!-- CARD 2: WAKIL KETUA BASKET -->
+                    <div class="exp-lead-card r d2" data-exp-cat="lead" id="expCardBasket">
+                        <div class="elc-header">
+                            <div class="elc-icon"><i class="fas fa-basketball"></i></div>
+                            <span class="elc-badge">Operations &amp; Teamwork</span>
+                        </div>
+                        <h4 class="elc-role">Wakil Ketua Ekstrakurikuler Basket</h4>
+                        <div class="elc-org">
+                            <i class="fas fa-school"></i> SMKN 64 Jakarta
+                            <span class="elc-period">2024 – 2025</span>
+                        </div>
+                        <div class="elc-divider"></div>
+                        <ul class="elc-achievements">
+                            <li><i class="fas fa-chevron-right"></i> Mendampingi operasional harian &amp; evaluasi
+                                program kerja.</li>
+                            <li><i class="fas fa-chevron-right"></i> Mengatur jadwal pertandingan persahabatan
+                                antarpelajar.</li>
+                            <li><i class="fas fa-chevron-right"></i> Mengelola logistik &amp; ketersediaan fasilitas
+                                latihan.</li>
+                        </ul>
+                        <div class="elc-tags">
+                            <span class="elc-tag">Management</span>
+                            <span class="elc-tag">Communication</span>
+                            <span class="elc-tag">Problem Solving</span>
+                        </div>
+                    </div>
+
+                    <!-- CARD 3: HUMAS PASKIBRA -->
+                    <div class="exp-lead-card r d1" data-exp-cat="lead" id="expCardPaskibra">
+                        <div class="elc-header">
+                            <div class="elc-icon"><i class="fas fa-flag"></i></div>
+                            <span class="elc-badge">Public Relations</span>
+                        </div>
+                        <h4 class="elc-role">Divisi Hubungan Masyarakat (Humas) Paskibra</h4>
+                        <div class="elc-org">
+                            <i class="fas fa-school"></i> SMKN 64 Jakarta
+                            <span class="elc-period">2023 – 2025</span>
+                        </div>
+                        <div class="elc-divider"></div>
+                        <ul class="elc-achievements">
+                            <li><i class="fas fa-chevron-right"></i> Mengelola komunikasi internal &amp; instruksi
+                                upacara resmi.</li>
+                            <li><i class="fas fa-chevron-right"></i> Menyusun publikasi agenda &amp; pemberitahuan resmi
+                                sekolah.</li>
+                            <li><i class="fas fa-chevron-right"></i> Koordinasi harmonis antar senior, alumni &amp;
+                                pembina Paskibra.</li>
+                        </ul>
+                        <div class="elc-tags">
+                            <span class="elc-tag">Public Speaking</span>
+                            <span class="elc-tag">Coordination</span>
+                            <span class="elc-tag">Formal Protocol</span>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- END LEADERSHIP GRID -->
+
+            </div>
+            <!-- END EXP STREAM -->
+
+        </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- SECTION PROJECTS — ENGINEERING CASE STUDY  -->
+    <!-- ========================================== -->
+    <section id="projects">
+        <div class="inner">
+            <div class="lbl r">— ENGINEERING PORTFOLIO</div>
+            <h2 class="st r d1">Case Study <em>Deck</em></h2>
+            <div class="sep r d2"></div>
+
+            <!-- ── Filter Pill Bar with Counter Badges ── -->
+            <div class="proj-filters r" id="projFilters">
+                <button class="proj-flt active" id="pfAll" onclick="filterProjects('all', this)">
+                    <i class="fas fa-th-large"></i> Semua <span class="proj-count">5</span>
+                </button>
+                <button class="proj-flt" id="pfWeb" onclick="filterProjects('web', this)">
+                    <i class="fas fa-globe"></i> Full Stack Web <span class="proj-count">2</span>
+                </button>
+                <button class="proj-flt" id="pfQa" onclick="filterProjects('qa', this)">
+                    <i class="fas fa-shield-halved"></i> QA &amp; Tools <span class="proj-count">2</span>
+                </button>
+                <button class="proj-flt" id="pfDesign" onclick="filterProjects('design', this)">
+                    <i class="fas fa-pen-ruler"></i> UI/UX Concept <span class="proj-count">1</span>
+                </button>
+            </div>
+
+            <!-- ── Project Stream ── -->
+            <div class="proj-stream" id="projStream">
+
+                <!-- ═══════════════════════════════════════════════ -->
+                <!-- FLAGSHIP: UNSIA CRM — Full-Width Case Study Card -->
+                <!-- ═══════════════════════════════════════════════ -->
+                <div class="proj-flagship r" data-proj-cat="qa web" id="projFlagship">
+
+                    <!-- Left: System Preview Mock -->
+                    <div class="pf-preview">
+                        <!-- Browser chrome bar -->
+                        <div class="pf-browser-bar">
+                            <div class="pf-dots">
+                                <span class="pf-dot red"></span>
+                                <span class="pf-dot yellow"></span>
+                                <span class="pf-dot green"></span>
+                            </div>
+                            <div class="pf-url">crm.unsia.ac.id/dashboard</div>
+                            <div class="pf-live-badge">
+                                <span class="pf-live-dot"></span> LIVE
+                            </div>
+                        </div>
+                        <!-- Screenshot -->
+                        <div class="pf-screen">
+                            <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=900&q=80"
+                                alt="UNSIA CRM Internal System Dashboard" />
+                            <!-- Overlay status badge -->
+                            <div class="pf-status-overlay">
+                                <i class="fas fa-circle-check"></i>
+                                PRODUCTION SYSTEM &middot; 6 MONTH DEPLOYMENT
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Case Study Info -->
+                    <div class="pf-info">
+                        <div class="pf-label">
+                            <i class="fas fa-star"></i> Flagship Industrial Engineering &middot; UNSIA
+                        </div>
+                        <h3 class="pf-title">Internal CRM Management &amp; Enrollment System</h3>
+
+                        <p class="pf-narrative">
+                            Dibangun selama magang 6 bulan di <strong>Universitas Siber Asia</strong>, sistem ini
+                            menangani alur pendaftaran mahasiswa, relasi data administrasi kampus, dan pelacakan
+                            status secara real time. Arsitektur REST API Laravel 12 dipadukan komponen React.js
+                            modular, dengan validasi QA manual <em>edge case</em> yang ketat di setiap modul.
+                        </p>
+
+                        <!-- Architectural Specs -->
+                        <div class="pf-arch">
+                            <div class="pf-arch-title">
+                                <i class="fas fa-microchip"></i> Architectural Specs
+                            </div>
+                            <div class="pf-arch-grid">
+                                <div class="pf-arch-item">
+                                    <span class="pf-arch-key">Backend</span>
+                                    <span class="pf-arch-val">Laravel 12 REST API</span>
+                                </div>
+                                <div class="pf-arch-item">
+                                    <span class="pf-arch-key">Frontend</span>
+                                    <span class="pf-arch-val">React.js + Tailwind CSS</span>
+                                </div>
+                                <div class="pf-arch-item">
+                                    <span class="pf-arch-key">Database</span>
+                                    <span class="pf-arch-val">MySQL (Laragon)</span>
+                                </div>
+                                <div class="pf-arch-item">
+                                    <span class="pf-arch-key">QA Method</span>
+                                    <span class="pf-arch-val">Edge Case Validation</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tech Stack -->
+                        <div class="pf-stack">
+                            <span class="pf-tag"><i class="fab fa-laravel"></i> Laravel 12</span>
+                            <span class="pf-tag"><i class="fab fa-react"></i> React.js</span>
+                            <span class="pf-tag"><i class="fas fa-wind"></i> Tailwind CSS</span>
+                            <span class="pf-tag"><i class="fas fa-database"></i> MySQL</span>
+                            <span class="pf-tag"><i class="fas fa-clipboard-check"></i> Manual QA</span>
+                            <span class="pf-tag"><i class="fab fa-git-alt"></i> Git</span>
+                        </div>
+
+                        <!-- Action Links -->
+                        <div class="pf-actions">
+                            <a href="#" class="pf-btn-primary" id="pfDemoBtn">
+                                <i class="fas fa-external-link-alt"></i> Lihat Demo
+                            </a>
+                            <a href="https://github.com/IJAYY19" target="_blank" rel="noopener noreferrer"
+                                class="pf-btn-secondary" id="pfGithubBtn">
+                                <i class="fab fa-github"></i> GitHub Repository
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ═══════════════════════════════════════════════ -->
+                <!-- SECONDARY GRID (2-column)                       -->
+                <!-- ═══════════════════════════════════════════════ -->
+                <div class="proj-secondary-grid" id="projSecGrid">
+
+                    <!-- PROJECT 2: E-Commerce Engine [web] -->
+                    <div class="proj-card r d1" data-proj-cat="web" id="projCard2">
+                        <div class="prj-tag-row">
+                            <span class="prj-cat-badge web-badge"><i class="fas fa-globe"></i> Full Stack Web</span>
+                        </div>
+                        <div class="prj-thumb">
+                            <img src="https://images.unsplash.com/photo-1557821552-17105176677c?auto=format&fit=crop&w=800&q=80"
+                                alt="E-Commerce Engine" />
+                            <div class="prj-thumb-overlay">
+                                <a href="#" class="prj-ovb" id="proj2Demo" title="Live Demo">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                                <a href="https://github.com/IJAYY19" target="_blank" rel="noopener noreferrer"
+                                    class="prj-ovb" id="proj2Github" title="GitHub">
+                                    <i class="fab fa-github"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="prj-body">
+                            <h4 class="prj-title">Modern E Commerce Engine &amp; Catalog</h4>
+                            <ul class="prj-bullets">
+                                <li><i class="fas fa-chevron-right"></i> Katalog produk dengan filter &amp; search
+                                    dinamis</li>
+                                <li><i class="fas fa-chevron-right"></i> Sistem keranjang &amp; checkout dengan validasi
+                                    stok</li>
+                                <li><i class="fas fa-chevron-right"></i> Admin dashboard manajemen inventaris MySQL</li>
+                            </ul>
+                            <div class="prj-stack">
+                                <span class="prj-chip">Laravel</span>
+                                <span class="prj-chip">PHP</span>
+                                <span class="prj-chip">MySQL</span>
+                                <span class="prj-chip">Blade</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PROJECT 3: QA Bug Tracker [qa] -->
+                    <div class="proj-card r d2" data-proj-cat="qa" id="projCard3">
+                        <div class="prj-tag-row">
+                            <span class="prj-cat-badge qa-badge"><i class="fas fa-bug"></i> QA &amp; Tools</span>
+                        </div>
+                        <div class="prj-thumb">
+                            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80"
+                                alt="QA Bug Tracker" />
+                            <div class="prj-thumb-overlay">
+                                <a href="#" class="prj-ovb" id="proj3Demo" title="Live Demo">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                                <a href="https://github.com/IJAYY19" target="_blank" rel="noopener noreferrer"
+                                    class="prj-ovb" id="proj3Github" title="GitHub">
+                                    <i class="fab fa-github"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="prj-body">
+                            <h4 class="prj-title">QA Bug Tracker &amp; Audit Suite</h4>
+                            <ul class="prj-bullets">
+                                <li><i class="fas fa-chevron-right"></i> Pencatatan &amp; klasifikasi temuan bug
+                                    terstruktur</li>
+                                <li><i class="fas fa-chevron-right"></i> Status tracking siklus perbaikan real-time</li>
+                                <li><i class="fas fa-chevron-right"></i> Laporan regression test otomatis &amp;
+                                    exportable</li>
+                            </ul>
+                            <div class="prj-stack">
+                                <span class="prj-chip">React.js</span>
+                                <span class="prj-chip">TypeScript</span>
+                                <span class="prj-chip">QA Workflow</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PROJECT 4: Corporate Profile [web] -->
+                    <div class="proj-card r d1" data-proj-cat="web" id="projCard4">
+                        <div class="prj-tag-row">
+                            <span class="prj-cat-badge web-badge"><i class="fas fa-building"></i> Full Stack Web</span>
+                        </div>
+                        <div class="prj-thumb">
+                            <img src="https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=800&q=80"
+                                alt="Corporate Profile" />
+                            <div class="prj-thumb-overlay">
+                                <a href="#" class="prj-ovb" id="proj4Demo" title="Live Demo">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                                <a href="https://github.com/IJAYY19" target="_blank" rel="noopener noreferrer"
+                                    class="prj-ovb" id="proj4Github" title="GitHub">
+                                    <i class="fab fa-github"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="prj-body">
+                            <h4 class="prj-title">Corporate Profile &amp; UMKM Showcase</h4>
+                            <ul class="prj-bullets">
+                                <li><i class="fas fa-chevron-right"></i> Desain elegan &amp; mobile-first responsive
+                                </li>
+                                <li><i class="fas fa-chevron-right"></i> SEO optimized dengan semantic HTML</li>
+                                <li><i class="fas fa-chevron-right"></i> Integrasi tombol WhatsApp &amp; form leads</li>
+                            </ul>
+                            <div class="prj-stack">
+                                <span class="prj-chip">WordPress</span>
+                                <span class="prj-chip">PHP</span>
+                                <span class="prj-chip">Responsive UI</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PROJECT 5: Fintech UI Concept [design] -->
+                    <div class="proj-card r d2" data-proj-cat="design" id="projCard5">
+                        <div class="prj-tag-row">
+                            <span class="prj-cat-badge design-badge"><i class="fas fa-pen-ruler"></i> UI/UX
+                                Concept</span>
+                        </div>
+                        <div class="prj-thumb">
+                            <img src="https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?auto=format&fit=crop&w=800&q=80"
+                                alt="Fintech Mobile UI" />
+                            <div class="prj-thumb-overlay">
+                                <a href="#" class="prj-ovb" id="proj5Demo" title="Figma Prototype">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                                <a href="https://github.com/IJAYY19" target="_blank" rel="noopener noreferrer"
+                                    class="prj-ovb" id="proj5Github" title="Design Assets">
+                                    <i class="fab fa-github"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="prj-body">
+                            <h4 class="prj-title">Fintech &amp; Logistics Mobile Interface Concept</h4>
+                            <ul class="prj-bullets">
+                                <li><i class="fas fa-chevron-right"></i> High fidelity prototype siap handoff</li>
+                                <li><i class="fas fa-chevron-right"></i> Design system komponen modular &amp; reusable
+                                </li>
+                                <li><i class="fas fa-chevron-right"></i> Thumb friendly navigation &amp;
+                                    micro interactions</li>
+                            </ul>
+                            <div class="prj-stack">
+                                <span class="prj-chip">Figma</span>
+                                <span class="prj-chip">Design System</span>
+                                <span class="prj-chip">Wireframing</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- END SECONDARY GRID -->
+
+            </div>
+            <!-- END PROJ STREAM -->
+
+        </div>
+    </section>
+
+    <!-- ============================================= -->
+    <!-- SECTION SERVICES — SPECIALIZED SOLUTIONS MATRIX -->
+    <!-- ============================================= -->
+    <section id="services">
+        <div class="inner">
+            <div class="lbl r">— SERVICES</div>
+            <h2 class="st r d1">Specialized Technical <em>Solutions</em></h2>
+            <div class="sep r d2"></div>
+
+            <!-- ── 4-Pillar Grid ── -->
+            <div class="svc-grid">
+
+                <!-- PILLAR 1: Full-Stack Web Dev -->
+                <div class="svc-pillar r" id="svcPillar1">
+                    <div class="svc-pillar-header">
+                        <div class="svc-icon"><i class="fas fa-code"></i></div>
+                        <div class="svc-pillar-meta">
+                            <div class="svc-pillar-num">01</div>
+                            <div class="svc-pillar-sub">Company Profile &amp; Landing Page</div>
+                        </div>
+                    </div>
+                    <h3 class="svc-pillar-title">Full Stack Web Development</h3>
+                    <p class="svc-pillar-desc">
+                        Website profesional berkualitas tinggi yang dirancang untuk mengkonversi pengunjung menjadi
+                        pelanggan dengan performa cepat, SEO solid, dan tampilan yang merepresentasikan brand Anda.
+                    </p>
+                    <ul class="svc-checklist">
+                        <li><i class="fas fa-circle-check"></i> Custom UI sesuai identitas brand</li>
+                        <li><i class="fas fa-circle-check"></i> Sub second load time &amp; optimasi aset</li>
+                        <li><i class="fas fa-circle-check"></i> SEO optimized semantic HTML5</li>
+                        <li><i class="fas fa-circle-check"></i> Mobile first responsive design</li>
+                        <li><i class="fas fa-circle-check"></i> Integrasi WhatsApp &amp; email leads</li>
+                    </ul>
+                    <div class="svc-footer">
+                        <a href="https://wa.me/6289538669356?text=Halo%20Jay%2C%20saya%20butuh%20jasa%20Web%20Development..."
+                            target="_blank" rel="noopener noreferrer" class="svc-cta-link" id="svcLink1">
+                            <i class="fab fa-whatsapp"></i> Diskusi Proyek
+                        </a>
+                    </div>
+                </div>
+
+                <!-- PILLAR 2: Custom Web App & Dashboard -->
+                <div class="svc-pillar svc-pillar-featured r d1" id="svcPillar2">
+                    <div class="svc-pillar-header">
+                        <div class="svc-icon"><i class="fas fa-server"></i></div>
+                        <div class="svc-pillar-meta">
+                            <div class="svc-pillar-num">02</div>
+                            <div class="svc-pillar-sub">CRUD, Portals &amp; Automation</div>
+                        </div>
+                    </div>
+                    <div class="svc-specialty-badge">
+                        <i class="fas fa-star"></i> DEVELOPER'S SPECIALTY
+                    </div>
+                    <h3 class="svc-pillar-title">Custom Web App &amp; Internal Dashboards</h3>
+                    <p class="svc-pillar-desc">
+                        Sistem web dinamis yang dibangun di atas arsitektur kokoh dari portal manajemen data kampus
+                        hingga dashboard CRUD bisnis internal yang scalable dan aman.
+                    </p>
+                    <ul class="svc-checklist">
+                        <li><i class="fas fa-circle-check"></i> Database design robust (MySQL)</li>
+                        <li><i class="fas fa-circle-check"></i> Autentikasi &amp; role management</li>
+                        <li><i class="fas fa-circle-check"></i> Clean API integration (Laravel + React)</li>
+                        <li><i class="fas fa-circle-check"></i> Scalable &amp; maintainable business logic</li>
+                    </ul>
+                    <div class="svc-footer">
+                        <a href="https://wa.me/6289538669356?text=Halo%20Jay%2C%20saya%20butuh%20jasa%20Web%20App..."
+                            target="_blank" rel="noopener noreferrer" class="svc-cta-link" id="svcLink2">
+                            <i class="fab fa-whatsapp"></i> Diskusi Proyek
+                        </a>
+                    </div>
+                </div>
+
+                <!-- PILLAR 3: Software QA & Code Audit -->
+                <div class="svc-pillar svc-pillar-featured r" id="svcPillar3">
+                    <div class="svc-pillar-header">
+                        <div class="svc-icon"><i class="fas fa-shield-halved"></i></div>
+                        <div class="svc-pillar-meta">
+                            <div class="svc-pillar-num">03</div>
+                            <div class="svc-pillar-sub">The Unique Edge!</div>
+                        </div>
+                    </div>
+                    <div class="svc-specialty-badge svc-badge-qa">
+                        <i class="fas fa-certificate"></i> QA CERTIFIED
+                    </div>
+                    <h3 class="svc-pillar-title">Software QA, Bug Fixing &amp; Code Audit</h3>
+                    <p class="svc-pillar-desc">
+                        Layanan pengujian dan audit kode yang terstruktur memastikan sistem web Anda bebas bug
+                        kritis, responsif di semua perangkat, dan berperforma optimal sebelum go live.
+                    </p>
+                    <ul class="svc-checklist">
+                        <li><i class="fas fa-circle-check"></i> Manual &amp; edge case testing menyeluruh</li>
+                        <li><i class="fas fa-circle-check"></i> Layout &amp; responsive bug resolution</li>
+                        <li><i class="fas fa-circle-check"></i> Performance &amp; page speed optimization</li>
+                        <li><i class="fas fa-circle-check"></i> Structured bug audit report</li>
+                    </ul>
+                    <div class="svc-footer">
+                        <a href="https://wa.me/6289538669356?text=Halo%20Jay%2C%20saya%20butuh%20jasa%20QA%20Audit..."
+                            target="_blank" rel="noopener noreferrer" class="svc-cta-link" id="svcLink3">
+                            <i class="fab fa-whatsapp"></i> Minta Audit
+                        </a>
+                    </div>
+                </div>
+
+                <!-- PILLAR 4: Academic & Student Project -->
+                <div class="svc-pillar r d1" id="svcPillar4">
+                    <div class="svc-pillar-header">
+                        <div class="svc-icon"><i class="fas fa-graduation-cap"></i></div>
+                        <div class="svc-pillar-meta">
+                            <div class="svc-pillar-num">04</div>
+                            <div class="svc-pillar-sub">Tugas RPL, PKL &amp; Proyek Akhir</div>
+                        </div>
+                    </div>
+                    <h3 class="svc-pillar-title">Academic &amp; Student Project Support</h3>
+                    <p class="svc-pillar-desc">
+                        Dukungan khusus untuk rekan pelajar dan mahasiswa yang memerlukan bantuan teknis dengan tarif
+                        ramah kantong pelajar dan pendekatan pembelajaran yang kolaboratif.
+                    </p>
+                    <ul class="svc-checklist">
+                        <li><i class="fas fa-circle-check"></i> Tarif bersahabat sesama pelajar</li>
+                        <li><i class="fas fa-circle-check"></i> Kode bersih &amp; well commented</li>
+                        <li><i class="fas fa-circle-check"></i> Free code walk through &amp; penjelasan logika</li>
+                        <li><i class="fas fa-circle-check"></i> Konsultasi revisi sampai paham</li>
+                    </ul>
+                    <div class="svc-footer">
+                        <a href="https://wa.me/6289538669356?text=Halo%20Jay%2C%20saya%20butuh%20bantuan%20tugas%20RPL..."
+                            target="_blank" rel="noopener noreferrer" class="svc-cta-link" id="svcLink4">
+                            <i class="fab fa-whatsapp"></i> Konsultasi Gratis
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+            <!-- END SVC GRID -->
+
+            <!-- ── Engineering Collaboration Terminal (CTA Banner) ── -->
+            <div class="svc-terminal r" id="svcTerminal">
+                <!-- Chrome bar -->
+                <div class="svc-term-chrome">
+                    <div class="svc-term-dots">
+                        <span></span><span></span><span></span>
+                    </div>
+                    <div class="svc-term-title"><i class="fas fa-handshake"></i> Konsultasi &amp; Kolaborasi Proyek
+                    </div>
+                    <div class="svc-term-live">
+                        <span class="svc-term-dot"></span>
+                        TERSEDIA UNTUK PROYEK &amp; KONTRAK
+                    </div>
+                </div>
+                <!-- Card body -->
+                <div class="svc-term-body">
+                    <div class="svc-term-prompt">
+                        <span class="svc-term-arrow"><i class="fas fa-circle-check"></i></span>
+                        <span class="svc-term-cmd">Terbuka untuk kolaborasi Freelance, Kontrak, maupun Full-Time</span>
+                    </div>
+                    <h3 class="svc-term-headline">Punya Ide Proyek atau Butuh Audit Sistem Web?</h3>
+                    <p class="svc-term-sub">
+                        Saya terbuka untuk kolaborasi membangun sistem web, konsultasi teknis, atau audit kualitas
+                        kode. Fast response biasanya kurang dari 1 jam di jam aktif.
+                    </p>
+                    <div class="svc-term-actions">
+                        <a href="https://wa.me/62895386693566?text=Halo%20Jay!%20Saya%20ingin%20konsultasi%20proyek%20web%20bersama%20Anda."
+                            target="_blank" rel="noopener noreferrer" class="svc-term-btn-primary" id="termWaBtn">
+                            <i class="fab fa-whatsapp"></i>
+                            Konsultasi via WhatsApp <span class="svc-term-fast">Fast Response</span>
+                        </a>
+                        <!-- KODE BARU (PASTI BERFUNGSI & BUKA GMAIL LANGSUNG): -->
+                        <a href="https://mail.google.com/mail/?view=cm&fs=1&to=abdulziyadalhadi@gmail.com&su=Project%20Brief%20-%20Diskusi%20Proyek%20Website"
+                            target="_blank" rel="noopener noreferrer" class="svc-term-btn-secondary" id="termEmailBtn">
+                            <i class="fas fa-envelope"></i> Kirim Brief via Email
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- SECTION CONTACT — COMMUNICATION HUB        -->
+    <!-- ========================================== -->
+    <section id="contact">
+        <div class="inner">
+            <!-- Label & Judul Section -->
+            <div class="lbl r">— HUBUNGI SAYA</div>
+            <h2 class="st r d1">Mulai <em>Diskusi</em> atau Inisiasi Proyek</h2>
+            <div class="sep r d2"></div>
+            <p class="contact-sub r d2">
+                Terbuka untuk kolaborasi pembuatan sistem web, pengujian &amp; audit kualitas perangkat lunak (QA),
+                maupun tawaran posisi profesional full-time/kontrak. Mari wujudkan ide Anda dengan standar arsitektur
+                terbaik.
+            </p>
+
+            <!-- Grid Kontak: Profil di Kiri, Form di Kanan -->
+            <div class="cgrid">
+
+                <!-- SISI KIRI: DIRECT COMMUNICATION CONSOLE -->
+                <div class="console-box r d1" id="contactConsole">
+                    <!-- Status & Response Guarantee Header -->
+                    <div class="console-status-card">
+                        <div class="console-live-badge">
+                            <span class="console-live-dot"></span>
+                            <span>TERSEDIA UNTUK PROYEK &amp; FULL-TIME</span>
+                        </div>
+                        <div class="console-guarantee">
+                            <i class="fas fa-bolt"></i>
+                            <span>Rata-rata balasan: <strong>&lt; 24 Jam</strong></span>
+                        </div>
+                    </div>
+
+                    <!-- Direct Action Cards -->
+                    <div class="caction-list">
+                        <!-- WhatsApp Direct Card -->
+                        <a href="https://wa.me/62895386693566?text=Halo%20Jay%2C%20saya%20tertarik%20untuk%20berdiskusi%20mengenai%20proyek%20atau%20audit%20sistem..."
+                            target="_blank" rel="noopener noreferrer" class="caction-card wa" id="cActionWa">
+                            <div class="caction-icon">
+                                <i class="fab fa-whatsapp"></i>
+                            </div>
+                            <div class="caction-content">
+                                <div class="caction-label">Direct WhatsApp</div>
+                                <div class="caction-val">+62 895-3866-93566</div>
+                                <div class="caction-meta">Fast response &middot; Chat Langsung</div>
+                            </div>
+                            <div class="caction-arrow">
+                                <i class="fas fa-arrow-up-right-from-square"></i>
+                            </div>
+                        </a>
+
+                        <!-- Email Direct Card — Click to copy, arrow opens Gmail compose -->
+                        <div class="caction-card mail" id="cActionMail" onclick="copyEmail(this)"
+                            onkeydown="if(event.key==='Enter'||event.key===' ')copyEmail(this)" role="button"
+                            tabindex="0" title="Klik untuk menyalin email" style="cursor:pointer;">
+                            <div class="caction-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="caction-content">
+                                <div class="caction-label">Email Address</div>
+                                <div class="caction-val">abdulziyadalhadi@gmail.com</div>
+                                <div class="caction-meta" id="emailMetaText">Klik untuk salin · Surat formal &amp;
+                                    Dokumen brief</div>
+                            </div>
+                            <a href="https://mail.google.com/mail/?view=cm&fs=1&to=abdulziyadalhadi@gmail.com"
+                                target="_blank" rel="noopener noreferrer" class="caction-arrow"
+                                onclick="event.stopPropagation()" title="Buka Gmail Compose">
+                                <i class="fas fa-arrow-up-right-from-square"></i>
+                            </a>
+                        </div>
+
+                        <!-- Location & Timezone Card -->
+                        <div class="caction-card loc" id="cActionLoc">
+                            <div class="caction-icon">
+                                <i class="fas fa-location-dot"></i>
+                            </div>
+                            <div class="caction-content">
+                                <div class="caction-label">Operational Base</div>
+                                <div class="caction-val">Jakarta Timur, Indonesia</div>
+                                <div class="caction-meta">WIB / GMT+7 &middot; Remote &amp; On-Site Ready</div>
+                            </div>
+                            <div class="caction-badge">
+                                <i class="fas fa-clock"></i> GMT+7
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modern Social Badge Deck -->
+                    <div class="console-socials">
+                        <div class="csocial-label">Social &amp; Developer Profiles:</div>
+                        <div class="csocial-links">
+                            <a href="https://github.com/IJAYY19" target="_blank" rel="noopener noreferrer"
+                                class="csocial-pill" id="socGithub" title="GitHub Profile">
+                                <i class="fab fa-github"></i>
+                                <span>@IJAYY19</span>
+                            </a>
+                            <a href="https://www.tiktok.com/@jyxcylz?is_from_webapp=1&sender_device=pc" target="_blank"
+                                rel="noopener noreferrer" class="csocial-pill" id="socTiktok" title="TikTok Profile">
+                                <i class="fab fa-tiktok"></i>
+                                <span>TikTok</span>
+                            </a>
+                            <a href="https://www.instagram.com/jaycblee_?stkn=MzFpYjRkZTN5dXN3" target="_blank"
+                                rel="noopener noreferrer" class="csocial-pill" id="socInstagram"
+                                title="Instagram Profile">
+                                <i class="fab fa-instagram"></i>
+                                <span>Instagram</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SISI KANAN: FORM KIRIM PESAN -->
+                <div class="terminal-dispatcher r d2" id="contactDispatcher">
+                    <!-- Window Chrome Bar -->
+                    <div class="term-chrome">
+                        <div class="term-dots">
+                            <span class="term-dot red"></span>
+                            <span class="term-dot yellow"></span>
+                            <span class="term-dot green"></span>
+                        </div>
+                        <div class="term-title">
+                            <i class="fas fa-paper-plane"></i> Form Pesan Langsung
+                        </div>
+                        <div class="term-badge">
+                            <span class="term-live-pulse"></span> SIAP
+                        </div>
+                    </div>
+
+                    <!-- Form Body -->
+                    <form class="term-form" id="contactForm" onsubmit="submitForm(event)">
+                        <!-- Quick Topic Selector -->
+                        <div class="topic-section">
+                            <label class="term-label">
+                                <i class="fas fa-hashtag"></i> Pilih Kategori:
+                            </label>
+                            <div class="topic-pill-bar" id="topicPillBar">
+                                <button type="button" class="topic-pill active"
+                                    onclick="setContactTopic('Jasa Website', this)">
+                                    <i class="fas fa-globe"></i> Jasa Website
+                                </button>
+                                <button type="button" class="topic-pill"
+                                    onclick="setContactTopic('QA / Bug Audit', this)">
+                                    <i class="fas fa-bug"></i> QA / Bug Audit
+                                </button>
+                                <button type="button" class="topic-pill" onclick="setContactTopic('Tugas / PKL', this)">
+                                    <i class="fas fa-graduation-cap"></i> Tugas / PKL
+                                </button>
+                                <button type="button" class="topic-pill"
+                                    onclick="setContactTopic('Kolaborasi / Karir', this)">
+                                    <i class="fas fa-handshake"></i> Kolaborasi / Karir
+                                </button>
+                                <button type="button" class="topic-pill" onclick="setContactTopic('Lainnya', this)">
+                                    <i class="fas fa-ellipsis"></i> Lainnya
+                                </button>
+                            </div>
+                            <!-- Hidden input storing the selected topic for Formspree submission -->
+                            <input type="hidden" id="fKeperluan" name="keperluan" value="Jasa Website" />
+                        </div>
+
+                        <!-- 2-Column Inputs: Name & Email -->
+                        <div class="term-row">
+                            <div class="term-group">
+                                <label for="fNama" class="term-label">
+                                    Nama Lengkap <span class="term-req">*</span>
+                                </label>
+                                <div class="term-input-wrap">
+                                    <i class="fas fa-user term-icon"></i>
+                                    <input type="text" id="fNama" name="nama" class="term-input"
+                                        placeholder="cth. Alex Pratama" required />
+                                </div>
+                            </div>
+                            <div class="term-group">
+                                <label for="fEmail" class="term-label">
+                                    Alamat Email <span class="term-req">*</span>
+                                </label>
+                                <div class="term-input-wrap">
+                                    <i class="fas fa-at term-icon"></i>
+                                    <input type="email" id="fEmail" name="email" class="term-input"
+                                        placeholder="cth. alex@company.com" required />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Message Textarea -->
+                        <div class="term-group">
+                            <label for="fPesan" class="term-label">
+                                Pesan / Ringkasan Kebutuhan <span class="term-req">*</span>
+                            </label>
+                            <div class="term-input-wrap textarea-wrap">
+                                <i class="fas fa-message term-icon text-icon-pos"></i>
+                                <textarea id="fPesan" name="pesan" class="term-input term-textarea" rows="5"
+                                    placeholder="Ceritakan detail proyek, target timeline, fitur yang diinginkan, atau pertanyaan Anda..."
+                                    required></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Form Footer Actions -->
+                        <div class="term-footer">
+                            <button type="submit" class="term-submit-btn" id="submitBtn">
+                                <i class="fas fa-paper-plane"></i>
+                                <span>Kirim Pesan</span>
+                            </button>
+                            <div class="term-security-note">
+                                <i class="fas fa-shield-halved"></i>
+                                <span>SSL Encrypted &middot; Terkirim langsung ke inbox</span>
+                            </div>
+                        </div>
+
+                        <!-- Notification Status Banner -->
+                        <div id="fstat" class="term-status-box"></div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- FOOTER — OBSIDIAN DEEP DEVELOPER FOOTER   -->
+    <!-- ========================================== -->
+    <footer id="footer">
+        <div class="footer-inner">
+            <div class="footer-top">
+                <!-- Brand & Tagline -->
+                <div class="footer-brand">
+                    <div class="footer-logo">
+                        <span class="flogo-bracket">&lt;</span><b>Abdul Ziyad</b> Al Hadi<span class="flogo-slash">
+                            /&gt;</span>
+                    </div>
+                    <p class="footer-tagline">
+                        Web Developer &amp; Software QA &mdash; Presisi Logika, Keindahan Antarmuka.
+                    </p>
+                </div>
+
+                <!-- Quick Navigation Links -->
+                <div class="footer-nav-block">
+                    <ul class="footer-links">
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#experience">Experience</a></li>
+                        <li><a href="#projects">Projects</a></li>
+                        <li><a href="#services">Services</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                        <li><a href="#game">Game</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-divider"></div>
+
+            <div class="footer-bottom">
+                <div class="footer-meta">
+                    <span class="fmeta-dot"></span>
+                    <span>Hosted on Static CDN &middot; Zero Database &middot; 100% Performance</span>
+                </div>
+                <p class="footer-copy">
+                    &copy; 2026 Abdul Ziyad Al Hadi. All rights reserved.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ========================================== -->
+    <!-- CREDENTIALS & OFFICIAL CERTIFICATES MODAL  -->
+    <!-- ========================================== -->
+    <div id="certModal" class="cert-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="certModalTitle"
+        onclick="handleCertBackdropClick(event)">
+        <div id="certDialog" class="cert-dialog">
+            <!-- Modal Window Header -->
+            <div class="cert-modal-header">
+                <div class="cert-modal-title-wrap">
+                    <div class="cert-title-top">
+                        <div class="cert-icon-badge"><i class="fas fa-shield-halved"></i></div>
+                        <h3 id="certModalTitle" class="cert-modal-title">Kredensial &amp; Sertifikasi Resmi</h3>
+                        <span class="cert-verified-pill"><i class="fas fa-circle-check"></i> Terverifikasi</span>
+                    </div>
+                    <p class="cert-modal-desc">Dokumentasi otentik sertifikasi kompetensi profesi, penilaian magang
+                        industri, dan kredensial teknis terdaftar.</p>
+                </div>
+                <button type="button" class="modal-close-btn" onclick="closeCertModal()"
+                    aria-label="Tutup Jendela Sertifikat">
+                    <i class="fas fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Modal Tab Bar -->
+            <div class="cert-tabs-bar" role="tablist" aria-label="Pilihan Sertifikat">
+                <button type="button" class="cert-tab active" id="certTab0" role="tab" aria-selected="true"
+                    aria-controls="certPane0" onclick="switchCertTab(0)">
+                    <span class="cert-tab-dot"></span>
+                    <i class="fas fa-code"></i>
+                    <span>BNSP Junior Programmer</span>
+                </button>
+                <button type="button" class="cert-tab" id="certTab1" role="tab" aria-selected="false"
+                    aria-controls="certPane1" onclick="switchCertTab(1)">
+                    <span class="cert-tab-dot"></span>
+                    <i class="fas fa-building"></i>
+                    <span>Magang Industri UNSIA</span>
+                </button>
+                <button type="button" class="cert-tab" id="certTab2" role="tab" aria-selected="false"
+                    aria-controls="certPane2" onclick="switchCertTab(2)">
+                    <span class="cert-tab-dot"></span>
+                    <i class="fas fa-chart-line"></i>
+                    <span>Bisa AI Academy</span>
+                </button>
+            </div>
+
+            <!-- Modal Content Body -->
+            <div class="cert-panes-wrapper">
+
+                <!-- PANE 0: BNSP / LSP SMKN 24 JAKARTA -->
+                <div class="cert-pane active" id="certPane0" role="tabpanel" aria-labelledby="certTab0">
+                    <div class="cert-pane-header">
+                        <div class="cert-entity-badge">
+                            <span class="cert-badge-org"><i class="fas fa-award"></i> LSP SMKN 24 JAKARTA &middot;
+                                BNSP</span>
+                            <span class="cert-badge-valid"><i class="fas fa-clock-rotate-left"></i> Berlaku s/d 28 Nov
+                                2028</span>
+                        </div>
+                        <h4 class="cert-pane-title">Sertifikat Kompetensi &mdash; Asisten Pemrogram Junior</h4>
+                        <p class="cert-pane-subtitle">Junior Assistant Programmer &middot; Standar Kompetensi Kerja
+                            Nasional Indonesia (SKKNI) Bidang TIK</p>
+
+                        <div class="cert-meta-grid">
+                            <div class="cert-meta-item">
+                                <span class="cert-meta-lbl">No. Sertifikat</span>
+                                <span class="cert-meta-val">62010 3512 0 0003667 2025</span>
+                            </div>
+                            <div class="cert-meta-item">
+                                <span class="cert-meta-lbl">No. Registrasi</span>
+                                <span class="cert-meta-val">TIK 1166 00987 2025</span>
+                            </div>
+                            <div class="cert-meta-item">
+                                <span class="cert-meta-lbl">Tanggal Uji / Terbit</span>
+                                <span class="cert-meta-val">28 November 2025</span>
+                            </div>
+                            <div class="cert-meta-item">
+                                <span class="cert-meta-lbl">Hasil Penilaian</span>
+                                <span class="cert-meta-val cert-val-highlight"><i class="fas fa-circle-check"></i>
+                                    KOMPETEN (K)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Subview Switcher (Front vs Back Units) -->
+                    <div class="cert-subviews-nav">
+                        <span class="cert-subviews-label"><i class="fas fa-images"></i> Halaman Dokumen:</span>
+                        <div class="cert-subviews-pills">
+                            <button type="button" class="cert-subview-btn active" id="subviewBtn_0_front"
+                                onclick="switchCertSubView(0, 'front')">
+                                <i class="fas fa-id-card"></i> Sertifikat Utama (Muka)
+                            </button>
+                            <button type="button" class="cert-subview-btn" id="subviewBtn_0_back"
+                                onclick="switchCertSubView(0, 'back')">
+                                <i class="fas fa-list-check"></i> Daftar 8 Unit Kompetensi (Belakang)
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Certificate Image Viewer -->
+                    <div class="cert-image-stage">
+                        <div class="cert-img-wrapper" id="certImgWrap_0">
+                            <img src="assets/sertif-bnsp.jpg"
+                                alt="Sertifikat BNSP Junior Programmer - Abdul Ziyad Al Hadi" id="certImg_0"
+                                class="cert-preview-img" loading="lazy">
+                        </div>
+                    </div>
+
+                    <!-- Highlights & Units Strip -->
+                    <div class="cert-highlights-box">
+                        <div class="cert-hl-heading">
+                            <i class="fas fa-check-double"></i>
+                            <span>8 Unit Kompetensi Terverifikasi LSP SMKN 24 Jakarta:</span>
+                        </div>
+                        <div class="cert-badges-flow">
+                            <span class="cert-badge-tag"><i class="fas fa-sitemap"></i> Struktur Data</span>
+                            <span class="cert-badge-tag"><i class="fas fa-file-lines"></i> Spesifikasi Program</span>
+                            <span class="cert-badge-tag"><i class="fas fa-code"></i> Coding &amp; Syntax</span>
+                            <span class="cert-badge-tag"><i class="fas fa-screwdriver-wrench"></i> Developer
+                                Tooling</span>
+                            <span class="cert-badge-tag"><i class="fas fa-gem"></i> Clean Code Guidelines</span>
+                            <span class="cert-badge-tag"><i class="fas fa-diagram-project"></i> Pemrograman
+                                Terstruktur</span>
+                            <span class="cert-badge-tag"><i class="fas fa-bug-slash"></i> Debugging &amp;
+                                Troubleshooting</span>
+                            <span class="cert-badge-tag"><i class="fas fa-layer-group"></i> Algoritma Pemrograman</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PANE 1: UNIVERSITAS SIBER ASIA (UNSIA) -->
+                <div class="cert-pane" id="certPane1" role="tabpanel" aria-labelledby="certTab1">
+                    <div class="cert-pane-header">
+                        <div class="cert-entity-badge">
+                            <span class="cert-badge-org"><i class="fas fa-graduation-cap"></i> Universitas Siber Asia
+                                (UNSIA)</span>
+                            <span class="cert-badge-valid"><i class="fas fa-calendar-check"></i> 6 Bulan Penuh (Jan -
+                                Jun 2026)</span>
+                        </div>
+                        <h4 class="cert-pane-title">Certificate of Internship &amp; Official Assessment</h4>
+                        <p class="cert-pane-subtitle">Praktik Kerja Lapangan (PKL) Industri &middot; Biro Sumber Daya
+                            Manusia (BSDM) UNSIA</p>
+
+                        <div class="cert-meta-grid">
+                            <div class="cert-meta-item">
+                                <span class="cert-meta-lbl">No. Sertifikat</span>
+                                <span class="cert-meta-val">10/UNSIA/BSDM/PKL/VII/2026</span>
+                            </div>
+                            <div class="cert-meta-item">
+                                <span class="cert-meta-lbl">Periode Kerja</span>
+                                <span class="cert-meta-val">5 Jan 2026 &ndash; 30 Jun 2026</span>
+                            </div>
+                            <div class="cert-meta-item">
+                                <span class="cert-meta-lbl">Tanggal Terbit</span>
+                                <span class="cert-meta-val">Jakarta, 3 Juli 2026</span>
+                            </div>
+                            <div class="cert-meta-item">
+                                <span class="cert-meta-lbl">Kualifikasi Nilai</span>
+                                <span class="cert-meta-val cert-val-highlight"><i class="fas fa-star"></i> 100%
+                                    EXCELLENT (94+)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Subview Switcher (Cert vs Assessment Sheet) -->
+                    <div class="cert-subviews-nav">
+                        <span class="cert-subviews-label"><i class="fas fa-images"></i> Halaman Dokumen:</span>
+                        <div class="cert-subviews-pills">
+                            <button type="button" class="cert-subview-btn active" id="subviewBtn_1_front"
+                                onclick="switchCertSubView(1, 'front')">
+                                <i class="fas fa-file-contract"></i> Sertifikat Magang Resmi
+                            </button>
+                            <button type="button" class="cert-subview-btn" id="subviewBtn_1_back"
+                                onclick="switchCertSubView(1, 'back')">
+                                <i class="fas fa-clipboard-check"></i> Lembar Penilaian Kinerja (10 Aspek)
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Certificate Image Viewer -->
+                    <div class="cert-image-stage">
+                        <div class="cert-img-wrapper" id="certImgWrap_1">
+                            <img src="assets/sertif-unsia.jpg" alt="Sertifikat Magang UNSIA - Abdul Ziyad Al Hadi"
+                                id="certImg_1" class="cert-preview-img" loading="lazy">
+                        </div>
+                    </div>
+
+                    <!-- Highlights & Scores Strip -->
+                    <div class="cert-highlights-box">
+                        <div class="cert-hl-heading">
+                            <i class="fas fa-chart-simple"></i>
+                            <span>Transkrip Penilaian Industri (10 Aspek Seluruhnya Predikat "Excellent"):</span>
+                        </div>
+                        <div class="cert-badges-flow">
+                            <span class="cert-badge-tag"><i class="fas fa-heart"></i> Loyalitas: 98 (A+)</span>
+                            <span class="cert-badge-tag"><i class="fas fa-user-shield"></i> Sikap &amp; Perilaku: 98
+                                (A+)</span>
+                            <span class="cert-badge-tag"><i class="fas fa-calendar-day"></i> Kehadiran / Disiplin: 95
+                                (A)</span>
+                            <span class="cert-badge-tag"><i class="fas fa-briefcase"></i> Employability: 95 (A)</span>
+                            <span class="cert-badge-tag"><i class="fas fa-arrows-split-up-and-left"></i> Pengambilan
+                                Keputusan: 90 (A)</span>
+                            <span class="cert-badge-tag"><i class="fas fa-laptop-code"></i> Engineering CRM UNSIA</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PANE 2: BISA.AI ACADEMY -->
+                <div class="cert-pane" id="certPane2" role="tabpanel" aria-labelledby="certTab2">
+                    <div class="cert-pane-header">
+                        <div class="cert-entity-badge">
+                            <span class="cert-badge-org"><i class="fas fa-brain"></i> PT Bisa Artifisial Indonesia
+                                &middot; BISA.AI</span>
+                            <span class="cert-badge-valid"><i class="fas fa-certificate"></i> Kursus Spesialisasi</span>
+                        </div>
+                        <h4 class="cert-pane-title">Sertifikat Penyelesaian &mdash; Dasar-Dasar Statistika Ilmu Komputer
+                        </h4>
+                        <p class="cert-pane-subtitle">Fondasi Komputasi Statistik &amp; Analisis Kuantitatif untuk
+                            Rekayasa Perangkat Lunak</p>
+
+                        <div class="cert-meta-grid">
+                            <div class="cert-meta-item">
+                                <span class="cert-meta-lbl">No. Sertifikat</span>
+                                <span class="cert-meta-val">2026/411/68228</span>
+                            </div>
+                            <div class="cert-meta-item">
+                                <span class="cert-meta-lbl">Tanggal Terbit</span>
+                                <span class="cert-meta-val">23 Juli 2026</span>
+                            </div>
+                            <div class="cert-meta-item">
+                                <span class="cert-meta-lbl">Instruktur / Penandatangan</span>
+                                <span class="cert-meta-val">Ir. M. Octaviano Pratama, S.Kom., M.Kom.</span>
+                            </div>
+                            <div class="cert-meta-item">
+                                <span class="cert-meta-lbl">Status Verifikasi</span>
+                                <span class="cert-meta-val cert-val-highlight"><i class="fas fa-circle-check"></i>
+                                    TERDAFTAR RESMI</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Certificate Image Viewer -->
+                    <div class="cert-image-stage">
+                        <div class="cert-img-wrapper" id="certImgWrap_2">
+                            <img src="assets/sertif-bisaai.jpg"
+                                alt="Sertifikat BISA.AI Academy Statistika - Abdul Ziyad Al Hadi" id="certImg_2"
+                                class="cert-preview-img" loading="lazy">
+                        </div>
+                    </div>
+
+                    <!-- Highlights Strip -->
+                    <div class="cert-highlights-box">
+                        <div class="cert-hl-heading">
+                            <i class="fas fa-calculator"></i>
+                            <span>Cakupan Kompetensi Matematika &amp; Data Komputasi:</span>
+                        </div>
+                        <div class="cert-badges-flow">
+                            <span class="cert-badge-tag"><i class="fas fa-chart-pie"></i> Statistika Deskriptif</span>
+                            <span class="cert-badge-tag"><i class="fas fa-dice"></i> Teori Probabilitas</span>
+                            <span class="cert-badge-tag"><i class="fas fa-square-root-variable"></i> Distribusi &amp;
+                                Variansi Data</span>
+                            <span class="cert-badge-tag"><i class="fas fa-microchip"></i> Logika Komputasi
+                                Algoritmik</span>
+                            <span class="cert-badge-tag"><i class="fas fa-vial-circle-check"></i> Fondasi Metrik
+                                Pengujian QA</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="cert-modal-footer">
+                <div class="cert-footer-auth">
+                    <i class="fas fa-lock"></i>
+                    <span>Dokumen otentik terbitan lembaga resmi (BNSP, UNSIA, BISA.AI). Resolusi tinggi dapat ditinjau
+                        atau diunduh langsung.</span>
+                </div>
+                <div class="cert-footer-actions">
+                    <a href="assets/sertif-bnsp.jpg" target="_blank" rel="noopener noreferrer" class="btn-cert-action"
+                        id="certDownloadBtn" download>
+                        <i class="fas fa-arrow-up-right-from-square"></i>
+                        <span>Buka Resolusi Penuh</span>
+                    </a>
+                    <button type="button" class="btn-cert-dismiss" onclick="closeCertModal()">
+                        <span>Tutup</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- FLOATING TIP JAR / TRAKTIR KOPI BUTTON     -->
+    <!-- ========================================== -->
+    <button type="button" id="tipFloatBtn" class="tip-float-btn" onclick="openTipModal()" aria-label="Traktir Kopi Jay">
+        <div class="tip-btn-glow"></div>
+        <div class="tip-btn-inner">
+            <span class="tip-icon-wrap">
+                <i class="fas fa-mug-hot"></i>
+                <span class="tip-pulse-dot"></span>
+            </span>
+            <span class="tip-btn-text">Traktir Kopi</span>
+        </div>
+    </button>
+
+    <!-- ========================================== -->
+    <!-- MODAL POPUP TRAKTIR KOPI / QRIS            -->
+    <!-- ========================================== -->
+    <div id="tipModal" class="tip-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="tipModalTitle"
+        onclick="handleTipBackdropClick(event)">
+        <div id="tipDialog" class="tip-dialog">
+            <!-- Header -->
+            <div class="tip-header">
+                <div class="tip-title-wrap">
+                    <div class="tip-coffee-badge"><i class="fas fa-mug-hot"></i></div>
+                    <div>
+                        <h3 id="tipModalTitle" class="tip-title">Apresiasi &amp; Traktir Kopi</h3>
+                        <span class="tip-verified-pill"><i class="fas fa-heart"></i> Digital Tip Jar</span>
+                    </div>
+                </div>
+                <button type="button" class="tip-close-btn" onclick="closeTipModal()" aria-label="Tutup Jendela">
+                    <i class="fas fa-xmark"></i>
+                </button>
+            </div>
+
+            <p class="tip-narrative">
+                Suka dengan portofolio ini atau terbantu dengan project saya? Kirimkan secangkir kopi santai via
+                <strong>GoPay</strong>, <strong>DANA</strong>, atau <strong>QRIS</strong> untuk menambah amunisi
+                begadang ngoding! ☕
+            </p>
+
+            <!-- Wallet Selector / QR Switcher -->
+            <div class="tip-wallet-tabs">
+                <button type="button" class="tip-wallet-tab active" id="tipTabGopay" onclick="switchTipQr('gopay')">
+                    <i class="fas fa-wallet"></i> GoPay
+                </button>
+                <button type="button" class="tip-wallet-tab" id="tipTabDana" onclick="switchTipQr('dana')">
+                    <i class="fas fa-money-bill-wave"></i> DANA
+                </button>
+            </div>
+
+            <!-- QR Container -->
+            <div class="tip-qr-stage">
+                <div class="tip-qr-frame">
+                    <img src="assets/qrgopay.jpeg" alt="QRIS GoPay &amp; DANA - Abdul Ziyad Al Hadi" id="tipQrImg"
+                        class="tip-qr-img" />
+                    <div class="tip-qr-corners">
+                        <span></span><span></span><span></span><span></span>
+                    </div>
+                </div>
+                <div class="tip-supported-row">
+                    <span class="tip-sup-badge"><i class="fas fa-wallet"></i> GoPay</span>
+                    <span class="tip-sup-badge"><i class="fas fa-money-bill-wave"></i> DANA</span>
+                    <span class="tip-sup-badge"><i class="fas fa-qrcode"></i> Semua E-Wallet</span>
+                </div>
+            </div>
+
+            <!-- Manual Number Copy Option -->
+            <div class="tip-copy-section">
+                <div class="tip-copy-lbl">Atau transfer langsung nomor e-wallet:</div>
+                <div class="tip-copy-box" onclick="copyTipNumber(this)" role="button" tabindex="0"
+                    title="Klik untuk salin nomor">
+                    <div class="tip-copy-num">
+                        <i class="fas fa-mobile-screen"></i>
+                        <span>0895-3866-93566</span>
+                        <span class="tip-acc-name">(Abdul Ziyad)</span>
+                    </div>
+                    <button type="button" class="tip-copy-btn">
+                        <i class="fas fa-copy"></i>
+                        <span class="tip-copy-txt">Salin</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="tip-footer">
+                <span>Terima kasih banyak atas apresiasi dan dukungannya! ✨</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hubungkan ke script.js -->
+    <script src="script.js"></script>
+</body>
+
+</html>
